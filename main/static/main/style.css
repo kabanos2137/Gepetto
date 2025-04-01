@@ -1,0 +1,18 @@
+:root {
+    --background: #707070;
+    --container: #D9D9D9;
+    --input: #BCBCBC;
+    --button-1: #737373;
+    --button-2: #848484;
+}
+
+body, html {
+    background-color: var(--background);
+    width: 100%;
+    height: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
