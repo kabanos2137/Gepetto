@@ -3,11 +3,23 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Strona Główna</title>
+        <title>Gepetto</title>
         {% load static %}
         <link rel="stylesheet" href="{% static 'main/style.css' %}">
+        <link rel="stylesheet" href="{% static 'main/index.css' %}">
     </head>
     <body>
-        
+        <div id="log-in-container">
+            <div id="log-in-title">
+                <h1>Gepetto</h1>
+                <h2>Log in</h2>
+            </div>
+            <div id="log-in-form">
+                <input type="text" class="log-in-form-field" name="log-in-form-username" placeholder="login" id="log-in-form-username">
+                <input type="password" class="log-in-form-field" name="log-in-form-password" placeholder="password" id="log-in-form-password">
+                <button class="log-in-form-button" id="log-in-form-button-log-in">Log in</button>
+                <button class="log-in-form-button" id="log-in-form-button-password">Create account</button>
+            </div>
+        </div>
     </body>
 </html>
