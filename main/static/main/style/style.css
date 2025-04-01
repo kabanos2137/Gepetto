@@ -10,13 +10,41 @@
 
 body, html {
     font-family: "Jura", sans-serif;
-    
+
     background-color: var(--background);
     width: 100%;
     height: 100%;
-    
+
+    margin: 0;
+    padding: 0;
+
+    overflow-x: clip;
+    overflow-y: clip;
+}
+
+main {
+    width: 100%;
+    height: 100%;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.transition-fade {
+    transition: 500ms;
+    opacity: 1;
+    transform: translateX(0);
+    transform-origin: left;
+}
+
+.is-animating .transition-fade {
+    opacity: 1;
+    transform: translateX(100%);
+}
+
+.is-leaving .transition-fade {
+    opacity: 0;
+    transform: translateX(0);
 }

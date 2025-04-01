@@ -4,22 +4,28 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Gepetto</title>
+
+        <script defer src="https://unpkg.com/swup@4"></script>
+
         {% load static %}
-        <link rel="stylesheet" href="{% static 'main/style.css' %}">
-        <link rel="stylesheet" href="{% static 'main/index.css' %}">
+        <link rel="stylesheet" href="{% static 'main/style/style.css' %}">
+        <script defer src="{% static 'main/scripts/swup.js' %}"></script>
     </head>
     <body>
-        <div id="log-in-container">
-            <div id="log-in-title">
-                <h1>Gepetto</h1>
-                <h2>Log in</h2>
+        <main id="swup" class="transition-fade">
+            <div id="log-in-container">
+                <div id="log-in-title">
+                    <h1>Gepetto</h1>
+                    <h2>Log in</h2>
+                </div>
+                <div id="log-in-form">
+                    <input type="text" class="log-in-form-field" name="log-in-form-username" placeholder="login" id="log-in-form-username">
+                    <input type="password" class="log-in-form-field" name="log-in-form-password" placeholder="password" id="log-in-form-password">
+                    <button class="log-in-form-button" id="log-in-form-button-log-in">Log in</button>
+                    <button class="log-in-form-button" id="log-in-form-button-create-account"><a href="/create-acc">Create account</a></button>
+                </div>
             </div>
-            <div id="log-in-form">
-                <input type="text" class="log-in-form-field" name="log-in-form-username" placeholder="login" id="log-in-form-username">
-                <input type="password" class="log-in-form-field" name="log-in-form-password" placeholder="password" id="log-in-form-password">
-                <button class="log-in-form-button" id="log-in-form-button-log-in">Log in</button>
-                <button class="log-in-form-button" id="log-in-form-button-password">Create account</button>
-            </div>
-        </div>
+            <link rel="stylesheet" href="{% static 'main/style/index.css' %}">
+        </main>
     </body>
 </html>

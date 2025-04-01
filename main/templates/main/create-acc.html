@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Gepetto</title>
+
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'main/style/style.css' %}">
+        <script src="https://unpkg.com/swup@4" defer></script>
+        <script src="{% static 'main/scripts/swup.js' %}" defer></script>
+    </head>
+    <body>
+        <main id="swup" class="transition-fade">
+            <div id="create-acc-container">
+                <div id="create-acc-title">
+                    <h1>Gepetto</h1>
+                    <h2>Create Account</h2>
+                </div>
+                <div id="create-acc-form">
+                    <input type="text" class="create-acc-form-field" name="create-acc-form-username" placeholder="login" id="create-acc-form-username">
+                    <input type="password" class="create-acc-form-field" name="create-acc-form-password" placeholder="password" id="create-acc-form-password">
+                    <input type="password" class="create-acc-form-field" name="create-acc-form-retype-password" placeholder="retype password" id="create-acc-form-retype-password">
+                    <div id="create-acc-form-password-validation">
+                        <div class="create-acc-form-password-validation-line">
+                            <svg id="animated-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                <line x1="1" y1="1" x2="15" y2="15" stroke="#b30000" stroke-linecap="round" opacity="1" stroke-width="2" />
+                                <line x1="1" y1="15" x2="15" y2="1" stroke="#b30000" stroke-linecap="round" opacity="1" stroke-width="2" />
+                            </svg>
+                            <p>at least 8 characters</p>
+                        </div>
+                        <div class="create-acc-form-password-validation-line">
+                            <svg id="animated-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                <line x1="1" y1="1" x2="15" y2="15" stroke="#b30000" stroke-linecap="round" opacity="1" stroke-width="2" />
+                                <line x1="1" y1="15" x2="15" y2="1" stroke="#b30000" stroke-linecap="round" opacity="1" stroke-width="2" />
+                            </svg>
+                            <p>lowercase and uppercase letters</p>
+                        </div>
+                        <div class="create-acc-form-password-validation-line">
+                            <svg id="animated-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                <line x1="1" y1="1" x2="15" y2="15" stroke="#b30000" stroke-linecap="round" opacity="1" stroke-width="2" />
+                                <line x1="1" y1="15" x2="15" y2="1" stroke="#b30000" stroke-linecap="round" opacity="1" stroke-width="2" />
+                            </svg>
+                            <p>special characters</p>
+                        </div>
+                    </div>
+                    <input type="email" class="create-acc-form-field" name="create-acc-form-email" placeholder="e-mail address" id="create-acc-form-email">
+                    <button class="create-acc-form-button" id="create-acc-form-button-create-account">Create account</button>
+                </div>
+            </div>
+            <link rel="stylesheet" href="{% static 'main/style/create-acc.css' %}">
+        </main>
+    </body>
+</html>
