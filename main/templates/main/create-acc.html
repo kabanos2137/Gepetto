@@ -41,13 +41,21 @@
                                 <line x1="1" y1="1" x2="15" y2="15" stroke="#b30000" stroke-linecap="round" opacity="1" stroke-width="2" />
                                 <line x1="1" y1="15" x2="15" y2="1" stroke="#b30000" stroke-linecap="round" opacity="1" stroke-width="2" />
                             </svg>
-                            <p>special characters</p>
+                            <p>special characters or numbers</p>
+                        </div>
+                        <div class="create-acc-form-password-validation-line">
+                            <svg id="animated-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                <line x1="1" y1="1" x2="15" y2="15" stroke="#b30000" stroke-linecap="round" opacity="1" stroke-width="2" />
+                                <line x1="1" y1="15" x2="15" y2="1" stroke="#b30000" stroke-linecap="round" opacity="1" stroke-width="2" />
+                            </svg>
+                            <p>both passwords are the same</p>
                         </div>
                     </div>
                     <input type="email" class="create-acc-form-field" name="create-acc-form-email" placeholder="e-mail address" id="create-acc-form-email">
                     <button class="create-acc-form-button" id="create-acc-form-button-create-account">Create account</button>
                 </div>
             </div>
+            <script type="application/javascript" src="{% static 'main/scripts/create-acc.js' %}"></script>
             <link rel="stylesheet" href="{% static 'main/style/create-acc.css' %}">
         </main>
     </body>
