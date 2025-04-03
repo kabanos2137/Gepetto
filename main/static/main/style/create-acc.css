@@ -3,7 +3,7 @@
     min-width: 360px;
 
     max-height: 650px;
-    min-height: 500px;
+    min-height: 550px;
     aspect-ratio: 1/1;
 
     background-color: var(--container);
@@ -129,5 +129,21 @@
 
     &#create-acc-form-button-create-account{
         background-color: var(--button-2);
+    }
+}
+
+#create-acc-form-err-message {
+    position: relative;
+    top: 0;
+
+    opacity: 1;
+    color: red;
+
+    transition: 0.5s;
+
+    &.hidden {
+        opacity: 0;
+        color: transparent;
+        top: 25%;
     }
 }

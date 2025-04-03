@@ -64,6 +64,8 @@ document.getElementById("create-acc-form-password").addEventListener("input", (e
     let value = event.target.value; // Get the value of the password input field
     let retypeValue = document.getElementById("create-acc-form-retype-password").value; // Get the value of the retype password input field
 
+    console.log(value, retypeValue);
+
     if(value.length > 7 && hasAtLeastEightChars === false) { // Check if the password has at least 8 characters
         hasAtLeastEightChars = true; // Set the flag to true
         let svg = document.getElementById("create-acc-form-password-validation").children[0].children[0]; // Get the SVG element
