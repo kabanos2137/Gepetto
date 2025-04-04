@@ -7,8 +7,10 @@
 
         {% load static %}
         <link rel="stylesheet" href="{% static 'main/style/style.css' %}">
-        <script src="https://unpkg.com/swup@4" defer></script>
-        <script src="{% static 'main/scripts/swup.js' %}" defer></script>
+        <script defer src="{% static 'main/scripts/swup.umd.js' %}"></script>
+        <script defer src="{% static 'main/scripts/swup.js' %}"></script>
+        <script defer src="{% static 'main/scripts/utils.js' %}"></script>
+        <script defer src="{% static 'main/scripts/create-acc.js' %}"></script>
     </head>
     <body>
         <main id="swup" class="transition-fade">
@@ -17,10 +19,11 @@
                     <h1>Gepetto</h1>
                     <h2>Create Account</h2>
                 </div>
-                <div id="create-acc-form">
-                    <input type="text" class="create-acc-form-field" name="create-acc-form-username" placeholder="login" id="create-acc-form-username">
-                    <input type="password" class="create-acc-form-field" name="create-acc-form-password" placeholder="password" id="create-acc-form-password">
-                    <input type="password" class="create-acc-form-field" name="create-acc-form-retype-password" placeholder="retype password" id="create-acc-form-retype-password">
+                <form id="create-acc-form">
+                    <p id="create-acc-form-err-message" class="hidden"></p>
+                    <input type="text" class="create-acc-form-field" name="username" placeholder="login" id="create-acc-form-username">
+                    <input type="password" class="create-acc-form-field" name="password" placeholder="password" id="create-acc-form-password">
+                    <input type="password" class="create-acc-form-field" name="retype-password" placeholder="retype password" id="create-acc-form-retype-password">
                     <div id="create-acc-form-password-validation">
                         <div class="create-acc-form-password-validation-line">
                             <svg id="animated-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -51,11 +54,10 @@
                             <p>both passwords are the same</p>
                         </div>
                     </div>
-                    <input type="email" class="create-acc-form-field" name="create-acc-form-email" placeholder="e-mail address" id="create-acc-form-email">
+                    <input type="email" class="create-acc-form-field" name="email" placeholder="e-mail address" id="create-acc-form-email">
                     <button class="create-acc-form-button" id="create-acc-form-button-create-account">Create account</button>
-                </div>
+                </form>
             </div>
-            <script type="application/javascript" src="{% static 'main/scripts/create-acc.js' %}"></script>
             <link rel="stylesheet" href="{% static 'main/style/create-acc.css' %}">
         </main>
     </body>

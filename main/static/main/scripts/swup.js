@@ -11,6 +11,21 @@ swup.hooks.on('animation:out:start', (visit) => {
     });
 });
 
+swup.hooks.on("page:view", (visit) => {
+    addEventListeners(visit.to.url)
+});
+
+window.addEventListener("load", (event) => {
+    addEventListeners(window.location.pathname)
+})
+
 swup.hooks.on('content:replace', () => {
     document.documentElement.classList.remove('is-leaving');
 });
+
+const addEventListeners = (url) => {
+    if(url === "/create-acc"){
+        document.getElementById("create-acc-form").reset();
+        createAccountForm.addEventListeners();
+    }
+}

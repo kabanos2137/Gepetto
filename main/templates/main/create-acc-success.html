@@ -14,19 +14,18 @@
     </head>
     <body>
         <main id="swup" class="transition-fade">
-            <div id="log-in-container">
-                <div id="log-in-title">
+            <div id="create-acc-success-container">
+                <div id="create-acc-success-title">
                     <h1>Gepetto</h1>
-                    <h2>Log in</h2>
+                    <h2>Account Created</h2>
                 </div>
-                <div id="log-in-form">
-                    <input type="text" class="log-in-form-field" name="log-in-form-username" placeholder="login" id="log-in-form-username">
-                    <input type="password" class="log-in-form-field" name="log-in-form-password" placeholder="password" id="log-in-form-password">
-                    <button class="log-in-form-button" id="log-in-form-button-log-in">Log in</button>
-                    <button class="log-in-form-button" id="log-in-form-button-create-account"><a href="/create-acc">Create account</a></button>
+                <div id="create-acc-success-content">
+                    <h1>Success!</h1>
+                    <h2>Thank you for choosing Gepetto!</h2>
                 </div>
+                <div id="create-acc-success-eq"><a href="/">Click here to log in!</a></div>
             </div>
-            <link rel="stylesheet" href="{% static 'main/style/index.css' %}">
+            <link rel="stylesheet" href="{% static 'main/style/create-acc-success.css' %}">
         </main>
     </body>
 </html>
