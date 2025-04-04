@@ -11,6 +11,7 @@
         <script defer src="{% static 'main/scripts/swup.js' %}"></script>
         <script defer src="{% static 'main/scripts/utils.js' %}"></script>
         <script defer src="{% static 'main/scripts/create-acc.js' %}"></script>
+        <script defer src="{% static 'main/scripts/login.js' %}"></script>
     </head>
     <body>
         <main id="swup" class="transition-fade">
@@ -19,12 +20,12 @@
                     <h1>Gepetto</h1>
                     <h2>Log in</h2>
                 </div>
-                <div id="log-in-form">
-                    <input type="text" class="log-in-form-field" name="log-in-form-username" placeholder="login" id="log-in-form-username">
-                    <input type="password" class="log-in-form-field" name="log-in-form-password" placeholder="password" id="log-in-form-password">
+                <form id="log-in-form">
+                    <input type="text" class="log-in-form-field" name="username" placeholder="login" id="log-in-form-username">
+                    <input type="password" class="log-in-form-field" name="password" placeholder="password" id="log-in-form-password">
                     <button class="log-in-form-button" id="log-in-form-button-log-in">Log in</button>
                     <button class="log-in-form-button" id="log-in-form-button-create-account"><a href="/create-acc">Create account</a></button>
-                </div>
+                </form>
             </div>
             <link rel="stylesheet" href="{% static 'main/style/index.css' %}">
         </main>

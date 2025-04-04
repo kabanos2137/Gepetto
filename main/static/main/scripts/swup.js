@@ -27,5 +27,8 @@ const addEventListeners = (url) => {
     if(url === "/create-acc"){
         document.getElementById("create-acc-form").reset();
         createAccountForm.addEventListeners();
+    }else if(url === "/"){
+        document.getElementById("log-in-form").reset();
+        logInForm.addEventListeners();
     }
 }

@@ -1,0 +1,16 @@
+#app-container {
+    width: 90%;
+    min-width: 400px;
+
+    max-height: 800px;
+    aspect-ratio: 1/1;
+
+    background-color: var(--container);
+
+    border-radius: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
