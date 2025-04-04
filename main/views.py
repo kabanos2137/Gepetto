@@ -6,3 +6,6 @@ def index(request):
 
 def create_acc(request):
     return render(request, "main/create-acc.html")
+
+def create_acc_success(request):
+    return render(request, "main/create-acc-success.html")

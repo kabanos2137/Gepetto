@@ -6,8 +6,6 @@ let passwordSame = false; // Initialize variable to check if password and retype
 let loginDuplicate = false; // Initialize variable to check if username is already taken
 let emailDuplicate = false; // Initialize variable to check if email is already taken
 
-//#region Functions
-
 class createAccountForm {
     static interpolateColor(startColor, endColor, progress) { // Interpolate between two colors
         const start = startColor.match(/\w\w/g).map(c => parseInt(c, 16)); // Convert hex to RGB
@@ -60,11 +58,11 @@ class createAccountForm {
         if(value.length > 7 && hasAtLeastEightChars === false) { // Check if the password has at least 8 characters
             hasAtLeastEightChars = true; // Set the flag to true
             let svg = document.getElementById("create-acc-form-password-validation").children[0].children[0]; // Get the SVG element
-            displayCorrectAnimation(svg); // Display the correct animation
+            this.displayCorrectAnimation(svg); // Display the correct animation
         }else if(value.length < 8 && hasAtLeastEightChars){
             hasAtLeastEightChars = false; // Set the flag to false
             let svg = document.getElementById("create-acc-form-password-validation").children[0].children[0]; // Get the SVG element
-            displayWrongAnimation(svg); // Display the wrong animation
+            this.displayWrongAnimation(svg); // Display the wrong animation
         }
 
         if(hasBothCases(value) && hasLowerUpperCase === false){ // Check if the password has both lower and upper case letters
@@ -156,24 +154,56 @@ class createAccountForm {
             .catch(err => console.log(err));
     }
 
+    static createAccountEventListener(event) { // Add event listener to the create account button
+        event.preventDefault(); // Prevent default action
+        if(hasAtLeastEightChars && hasLowerUpperCase && hasSpecialCharsOrNumbers && passwordSame && !loginDuplicate && !emailDuplicate) { // Check if the data is valid
+            let form = new FormData(document.forms["create-acc-form"]); // Get the form data
+
+            let username = form.get("username"); // Get the username
+            let password = form.get("password"); // Get the password
+            let email = form.get("email"); // Get the email
+
+            if (username === "" || password === "" || email === "") { // Check if the data is valid
+                return;
+            }
+
+            fetch("/api/user", { // Send the data to the server
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json" // Set content type to JSON
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    email: email
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    swup.navigate('/create-acc-success'); // Navigate to the success page
+                });
+        }
+    }
+
     static addEventListeners() {
         document.getElementById("create-acc-form-username").addEventListener("input", (event) => { // Add event listener to the username input field)
-            this.loginEventListener(event);
+            this.loginEventListener(event); // Add event listener to the username input field
         });
 
         document.getElementById("create-acc-form-email").addEventListener("input", (event) => { // Add event listener to the username input field)
-            this.emailEventListener(event);
+            this.emailEventListener(event); // Add event listener to the email input field
         });
 
         document.getElementById("create-acc-form-password").addEventListener("input", (event) => { // Add event listener to the password input field
-            this.passwordEventListener(event);
+            this.passwordEventListener(event); // Add event listener to the password input field
         });
 
         document.getElementById("create-acc-form-retype-password").addEventListener("input", (event) => { // Add event listener to the retype password input field
-            this.retypePasswordEventListener(event);
+            this.retypePasswordEventListener(event); // Add event listener to the retype password input field
+        });
+
+        document.getElementById("create-acc-form-button-create-account").addEventListener("click", (event) => {
+           this.createAccountEventListener(event); // Add event listener to the create account button
         });
     }
 }
-
-//#endregion
-

@@ -49,6 +49,7 @@ def user(_request):
                 "found": False
             }, status=status.HTTP_400_BAD_REQUEST)
     elif _request.method == 'POST': # check if request method is POST
+        print(_request.data) # print request data for debugging
         _username = _request.data['username'] # get username from request
         _password = _request.data['password'] # get password from request
         _email = _request.data['email'] # get email from request

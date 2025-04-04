@@ -19,8 +19,7 @@
                     <h1>Gepetto</h1>
                     <h2>Create Account</h2>
                 </div>
-                <form action="./api/user" method="POST" id="create-acc-form">
-                    {% csrf_token %} <!-- CSRF token for security -->
+                <form id="create-acc-form">
                     <p id="create-acc-form-err-message" class="hidden"></p>
                     <input type="text" class="create-acc-form-field" name="username" placeholder="login" id="create-acc-form-username">
                     <input type="password" class="create-acc-form-field" name="password" placeholder="password" id="create-acc-form-password">

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Gepetto</title>
+
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'main/style/style.css' %}">
+        <script defer src="{% static 'main/scripts/swup.umd.js' %}"></script>
+        <script defer src="{% static 'main/scripts/swup.js' %}"></script>
+        <script defer src="{% static 'main/scripts/utils.js' %}"></script>
+        <script defer src="{% static 'main/scripts/create-acc.js' %}"></script>
+    </head>
+    <body>
+        <main id="swup" class="transition-fade">
+            <div id="create-acc-success-container">
+                <div id="create-acc-success-title">
+                    <h1>Gepetto</h1>
+                    <h2>Account Created</h2>
+                </div>
+                <div id="create-acc-success-content">
+                    <h1>Success!</h1>
+                    <h2>Thank you for choosing Gepetto!</h2>
+                </div>
+                <div id="create-acc-success-eq"><a href="/">Click here to log in!</a></div>
+            </div>
+            <link rel="stylesheet" href="{% static 'main/style/create-acc-success.css' %}">
+        </main>
+    </body>
+</html>

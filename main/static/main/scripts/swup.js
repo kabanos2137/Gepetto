@@ -25,6 +25,7 @@ swup.hooks.on('content:replace', () => {
 
 const addEventListeners = (url) => {
     if(url === "/create-acc"){
-        createAccountForm.addEventListeners()
+        document.getElementById("create-acc-form").reset();
+        createAccountForm.addEventListeners();
     }
 }
