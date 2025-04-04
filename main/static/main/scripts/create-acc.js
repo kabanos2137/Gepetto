@@ -111,23 +111,25 @@ class createAccountForm {
         }
     }
 
-    static errorDisplay() {
+    static errorDisplay(errorMSG) {
+        let display;
         let error = document.getElementById("create-acc-form-err-message");
 
-        console.log(loginDuplicate, emailDuplicate)
-
-        if(loginDuplicate && emailDuplicate){
-            error.innerText = "Username and email are already taken"; // Display error message
-            error.className = ""; // Set class name to none
+        if(errorMSG){
+            display = errorMSG;
+        }else if(loginDuplicate && emailDuplicate){
+            display = "Username and email are already taken"; // Display error message
         }else if(loginDuplicate) {
-            error.innerText = "Username is already taken"; // Display error message
-            error.className = ""; // Set class name to none
+            display = "Username is already taken"; // Display error message
         }else if(emailDuplicate) {
-            error.innerText = "Email is already taken"; // Display error message
-            error.className = ""; // Set class name to none
+            display = "Email is already taken"; // Display error message
         }else{
             error.className = "hidden"; // Set class name to hidden
+            return;
         }
+
+        error.innerHTML = display;
+        error.className = "";
     }
 
     static loginEventListener(event) { // Add event listener to the login input field
@@ -155,18 +157,26 @@ class createAccountForm {
     }
 
     static createAccountEventListener(event) { // Add event listener to the create account button
-        event.preventDefault(); // Prevent default action
+        event.preventDefault(); // Prevent default action)
+
+        let form = new FormData(document.forms["create-acc-form"]); // Get the form data
+
+        let username = form.get("username"); // Get the username
+        let password = form.get("password"); // Get the password
+        let email = form.get("email"); // Get the email
+
+        if (username === "") { // Check if the data is valid
+            this.errorDisplay("Username cannot be empty")
+            return;
+        }else if(password === ""){
+            this.errorDisplay("Password cannot be empty")
+            return;
+        }else if(email === ""){
+            this.errorDisplay("E-mail cannot be empty")
+            return;
+        }
+
         if(hasAtLeastEightChars && hasLowerUpperCase && hasSpecialCharsOrNumbers && passwordSame && !loginDuplicate && !emailDuplicate) { // Check if the data is valid
-            let form = new FormData(document.forms["create-acc-form"]); // Get the form data
-
-            let username = form.get("username"); // Get the username
-            let password = form.get("password"); // Get the password
-            let email = form.get("email"); // Get the email
-
-            if (username === "" || password === "" || email === "") { // Check if the data is valid
-                return;
-            }
-
             fetch("/api/user", { // Send the data to the server
                 method: "POST",
                 headers: {
