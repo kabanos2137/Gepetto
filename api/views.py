@@ -65,3 +65,18 @@ def user(_request):
             'name': _username,
             'password': _password,
         }, status=status.HTTP_201_CREATED) # return success response
+
+@api_view(['GET'])
+def login(_request):
+    if _request.method == 'GET':
+        _username = _request.GET['username']
+        _password = _request.GET['password']
+        _user = UserCredentials.objects.filter(name=_username, password=_password)
+        if _user.exists():
+            return Response({
+                "found": True
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "found": False
+            }, status=status.HTTP_200_OK)

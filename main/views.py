@@ -9,3 +9,6 @@ def create_acc(request):
 
 def create_acc_success(request):
     return render(request, "main/create-acc-success.html")
+
+def app(request):
+    return render(request, "main/app.html")
