@@ -14,11 +14,11 @@ def user(_request):
             _user = UserCredentials.objects.filter(name=_username, email=_email)
             if _user.exists():
                 return Response({
-                    "message": "User found",
+                    "found": True
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({
-                    "message": "User not found",
+                    "found": False
                 }, status=status.HTTP_200_OK)
         elif "username" in _request.GET:
             _username = _request.GET["username"]
@@ -26,11 +26,11 @@ def user(_request):
             _user = UserCredentials.objects.filter(name=_username)
             if _user.exists():
                 return Response({
-                    "message": "User found",
+                    "found": True
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({
-                    "message": "User not found",
+                    "found": False
                 }, status=status.HTTP_200_OK)
         elif "email" in _request.GET:
             _email = _request.GET["email"]
@@ -38,15 +38,15 @@ def user(_request):
             _user = UserCredentials.objects.filter(email=_email)
             if _user.exists():
                 return Response({
-                    "message": "User found",
+                    "found": True
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({
-                    "message": "User not found",
+                    "found": False
                 }, status=status.HTTP_200_OK)
         else:
             return Response({
-                "message": "No username or email provided",
+                "found": False
             }, status=status.HTTP_400_BAD_REQUEST)
     elif _request.method == 'POST': # check if request method is POST
         _username = _request.data['username'] # get username from request

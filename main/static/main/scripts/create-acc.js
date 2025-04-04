@@ -3,6 +3,9 @@ let hasLowerUpperCase = false; // Initialize variable to check if password has b
 let hasSpecialCharsOrNumbers = false; // Initialize variable to check if password has special characters or numbers
 let passwordSame = false; // Initialize variable to check if password and retype password are the same
 
+let loginDuplicate = false; // Initialize variable to check if username is already taken
+let emailDuplicate = false; // Initialize variable to check if email is already taken
+
 //#region Functions
 
 class createAccountForm {
@@ -110,7 +113,58 @@ class createAccountForm {
         }
     }
 
-    static addEventListeners() { // Add event listeners to the password and retype password input fields
+    static errorDisplay() {
+        let error = document.getElementById("create-acc-form-err-message");
+
+        console.log(loginDuplicate, emailDuplicate)
+
+        if(loginDuplicate && emailDuplicate){
+            error.innerText = "Username and email are already taken"; // Display error message
+            error.className = ""; // Set class name to none
+        }else if(loginDuplicate) {
+            error.innerText = "Username is already taken"; // Display error message
+            error.className = ""; // Set class name to none
+        }else if(emailDuplicate) {
+            error.innerText = "Email is already taken"; // Display error message
+            error.className = ""; // Set class name to none
+        }else{
+            error.className = "hidden"; // Set class name to hidden
+        }
+    }
+
+    static loginEventListener(event) { // Add event listener to the login input field
+        let value = event.target.value;
+
+        fetch("/api/user?username=" + value)
+            .then(res => res.json())
+            .then(res => {
+                loginDuplicate = res.found; // Check if the username is already taken
+                this.errorDisplay() // Display error message if username is already taken
+            })
+            .catch(err => console.log(err));
+    }
+
+    static emailEventListener(event) { // Add event listener to the login input field
+        let value = event.target.value;
+
+        fetch("/api/user?email=" + value)
+            .then(res => res.json())
+            .then(res => {
+                emailDuplicate = res.found; // Check if the username is already taken
+                this.errorDisplay() // Display error message if mail is already taken
+            })
+            .catch(err => console.log(err));
+    }
+
+    static addEventListeners() {
+        document.getElementById("create-acc-form-username").addEventListener("input", (event) => { // Add event listener to the username input field)
+            this.loginEventListener(event);
+        });
+
+        document.getElementById("create-acc-form-email").addEventListener("input", (event) => { // Add event listener to the username input field)
+            this.emailEventListener(event);
+        });
+
         document.getElementById("create-acc-form-password").addEventListener("input", (event) => { // Add event listener to the password input field
             this.passwordEventListener(event);
         });

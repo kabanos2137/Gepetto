@@ -135,10 +135,8 @@
 #create-acc-form-err-message {
     position: relative;
     top: 0;
-
     opacity: 1;
     color: red;
-
     transition: 0.5s;
 
     &.hidden {
