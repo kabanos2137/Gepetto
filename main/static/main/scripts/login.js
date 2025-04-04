@@ -1,4 +1,16 @@
 class logInForm {
+    static errorDisplay(remove = false) {
+        let error = document.getElementById("log-in-form-err-message");
+
+        if(remove){
+            error.className = "hidden";
+        }else{
+            error.innerHTML = "Login was unsuccessful. Please try again.";
+            error.className = "";
+        }
+
+    }
+
     static logInButtonEventListener(event) {
         event.preventDefault();
 
@@ -13,15 +25,27 @@ class logInForm {
                 if(res.found){
                     swup.navigate("/app")
                 }else{
-                    //TODO: show error message
+                    this.errorDisplay();
                 }
             })
             .catch(err => console.error(err));
     }
 
+    static formFieldEventListener(event) {
+        this.errorDisplay(true);
+    }
+
     static addEventListeners() {
         document.getElementById("log-in-form-button-log-in").addEventListener("click", (event) => {
             logInForm.logInButtonEventListener(event);
+        });
+
+        document.getElementById("log-in-form-username").addEventListener("input", (event) => {
+            logInForm.formFieldEventListener(event);
+        });
+
+        document.getElementById("log-in-form-password").addEventListener("input", (event) => {
+            logInForm.formFieldEventListener(event);
         });
     }
 }

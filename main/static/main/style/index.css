@@ -3,6 +3,7 @@
     min-width: 360px;
 
     max-height: 550px;
+    min-height: 400px;
     aspect-ratio: 1/1;
 
     background-color: var(--container);
@@ -110,5 +111,21 @@
 
         text-decoration: none;
         color: inherit;
+    }
+}
+
+#log-in-form-err-message {
+    position: relative;
+    top: 0;
+    opacity: 1;
+    color: red;
+    transition: 0.5s;
+
+    text-align: center;
+
+    &.hidden {
+        opacity: 0;
+        color: transparent;
+        top: 25%;
     }
 }

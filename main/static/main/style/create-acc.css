@@ -141,6 +141,8 @@
     color: red;
     transition: 0.5s;
 
+    text-align: center;
+
     &.hidden {
         opacity: 0;
         color: transparent;
