@@ -12,3 +12,6 @@ def create_acc_success(request):
 
 def app(request):
     return render(request, "main/app.html")
+
+def m_app(request):
+    return render(request, "main/m-app.html")

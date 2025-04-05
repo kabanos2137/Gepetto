@@ -1,6 +1,4 @@
-const swup = new Swup({
-    animationSelector: '.transition-fade'
-});
+const swup = new Swup();
 
 swup.hooks.on('animation:out:start', (visit) => {
     document.documentElement.classList.add('is-leaving');
@@ -24,11 +22,42 @@ swup.hooks.on('content:replace', () => {
 });
 
 const addEventListeners = (url) => {
+    let username = localStorage.getItem("username");
+    let password = localStorage.getItem("password");
+
     if(url === "/create-acc"){
-        document.getElementById("create-acc-form").reset();
-        createAccountForm.addEventListeners();
+        if(username === null || password === null){
+            document.getElementById("create-acc-form").reset();
+            createAccountForm.addEventListeners();
+        }else {
+            if(isMobile(window)) {
+                swup.navigate("/m-app")
+            }else{
+                swup.navigate("/app")
+            }
+        }
     }else if(url === "/"){
-        document.getElementById("log-in-form").reset();
-        logInForm.addEventListeners();
+        if(username === null || password === null){
+            document.getElementById("log-in-form").reset();
+            logInForm.addEventListeners();
+        }else {
+            if(isMobile(window)) {
+                swup.navigate("/m-app")
+            }else{
+                swup.navigate("/app")
+            }
+        }
+    }else if(url === "/app") {
+        if (username === null || password === null) {
+            swup.navigate("/")
+        } else {
+
+        }
+    }else if(url === "/m-app") {
+        if (username === null || password === null) {
+            swup.navigate("/")
+        } else {
+
+        }
     }
 }
