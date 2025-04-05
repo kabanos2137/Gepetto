@@ -1,4 +1,6 @@
 class appPage {
+    menuExpanded = false;
+
     static logoffEventListener(event) {
         localStorage.removeItem("username");
         localStorage.removeItem("password");
@@ -6,10 +8,18 @@ class appPage {
         swup.navigate("/");
     }
 
+    static expandEventListener(event) {
+        document.getElementById("app-content").classList.toggle("blurred");
+        document.getElementById("app-settings-bar").classList.toggle("expanded");
+    }
+
     static addEventListeners() {
         document.getElementById("app-settings-bar-logoff").addEventListener("click", (event) => {
-            console.log("aa")
             this.logoffEventListener(event);
         });
+
+        document.getElementById("app-settings-bar-expand").addEventListener("click", (event) => {
+            this.expandEventListener(event);
+        })
     }
 }

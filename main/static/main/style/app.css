@@ -8,6 +8,7 @@
     align-items: center;
     justify-content: start;
     flex-direction: row;
+    overflow-x: clip;
 }
 
 #app-settings-bar {
@@ -16,12 +17,16 @@
 
     background-color: var(--background);
 
+    transition: 0.5s;
+
     display: flex;
-    align-items: center;
+    align-items: end;
     justify-content: space-between;
     flex-direction: column;
 
     & > div {
+        transition: 0.5s;
+
         width: 100%;
         height: auto;
 
@@ -29,8 +34,8 @@
         padding: 0;
 
         & > i {
-            width: 100%;
-            aspect-ratio: 1/1;
+            width: 80px;
+            height: 80px;
 
             display: flex;
             align-items: center;
@@ -57,5 +62,93 @@
                 color: #B30000;
             }
         }
+    }
+}
+
+#app-settings-bar.expanded {
+    height: 100%;
+    width: 360px;
+
+    background-color: var(--background);
+
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    flex-direction: column;
+
+    & > div {
+        width: 80px;
+        height: auto;
+
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        flex-direction: column;
+
+        margin: 0;
+        padding: 0;
+
+        & > i {
+            width: 80px;
+            height: 80px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 200%;
+
+            cursor: pointer;
+
+            transition: 0.5s;
+
+            &.fa-angles-right{
+                transform: rotate(180deg);
+            }
+
+            &.fa-angles-right:hover{
+                transform: rotate(135deg);
+            }
+
+            &.fa-gear:hover {
+                transform: rotate(45deg);
+            }
+
+            &.fa-door-open{
+                transition: 0.3s;
+            }
+
+            &.fa-door-open:hover {
+                color: #B30000;
+            }
+        }
+    }
+}
+
+#app-content{
+    &.blurred {
+        filter: blur(5px);
+    }
+
+    transition: 0.5s;
+
+    width: calc(100% - 80px);
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    & > h1{
+        font-size: 70px;
+        font-weight: 300;
+    }
+
+    & > h1, & > h2 {
+
+    }
+
+    & u {
+        cursor: pointer;
     }
 }
