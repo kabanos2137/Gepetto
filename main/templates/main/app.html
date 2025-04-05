@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Gepetto</title>
 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
         {% load static %}
         <link rel="stylesheet" href="{% static 'main/style/style.css' %}">
         <script defer src="{% static 'main/scripts/swup.umd.js' %}"></script>
@@ -12,12 +14,19 @@
         <script defer src="{% static 'main/scripts/utils.js' %}"></script>
         <script defer src="{% static 'main/scripts/create-acc.js' %}"></script>
         <script defer src="{% static 'main/scripts/login.js' %}"></script>
+        <script defer src="{% static 'main/scripts/app.js' %}"></script>
     </head>
     <body>
         <main id="swup" class="transition-fade">
             <div id="app-container">
                 <div id="app-settings-bar">
-
+                    <div>
+                        <i id="app-settings-bar-expand" class="fa-solid fa-angles-right"></i>
+                    </div>
+                    <div>
+                        <i id="app-settings-bar-settings" class="fa-solid fa-gear"></i>
+                        <i id="app-settings-bar-logoff" class="fa-solid fa-door-open"></i>
+                    </div>
                 </div>
             </div>
             <link rel="stylesheet" href="{% static 'main/style/app.css' %}">

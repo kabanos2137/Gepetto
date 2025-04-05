@@ -51,13 +51,21 @@ const addEventListeners = (url) => {
         if (username === null || password === null) {
             swup.navigate("/")
         } else {
-
+            if(isMobile(window)) {
+                swup.navigate("/m-app")
+            }else{
+                appPage.addEventListeners();
+            }
         }
     }else if(url === "/m-app") {
         if (username === null || password === null) {
             swup.navigate("/")
         } else {
+            if(isMobile(window)) {
 
+            }else{
+                swup.navigate("/app")
+            }
         }
     }
 }
