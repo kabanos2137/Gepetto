@@ -80,3 +80,19 @@ def login(_request):
             return Response({
                 "found": False
             }, status=status.HTTP_200_OK)
+
+@api_view(['POST', 'GET'])
+def assistant(_request):
+    if _request.method == 'POST':
+        _name = _request.data['assistant_name']
+        _description = _request.data['description']
+        _response_style = _request.data['response_style']
+        _tone = _request.data['tone']
+        _profile_picture = _request.data['profile_picture']
+        _username = _request.data['username']
+        _password = _request.data['password']
+
+        return Response(
+            {},
+            status=status.HTTP_201_CREATED
+        )

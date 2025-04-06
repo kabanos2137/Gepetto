@@ -68,8 +68,50 @@ class createAssistantPage {
         }
     }
 
+    static errorDisplay(errorMSG) {
+        let error = document.getElementById("create-assistant-error");
+
+        error.innerHTML = errorMSG;
+        error.className = "";
+    }
+
     static createEventListener(event) {
-        console.log("chuj")
+        let form = new FormData(document.forms['create-assistant-form']);
+        let canvas = document.getElementById("create-assistant-form-profile-picture-generator")
+
+        let name = form.get("name");
+        let description = form.get("description");
+        let responseStyle = form.get("response-style");
+        let tone = form.get("tone");
+        let profilePicture = canvas.toDataURL("image/png");
+
+        if(name === "" || description === "" || responseStyle === "" || tone === "") {
+            this.errorDisplay("Please fill in all fields");
+            return;
+        }
+
+        fetch("/api/assistant", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                assistant_name: name,
+                description: description,
+                response_style: responseStyle,
+                tone: tone,
+                profile_picture: profilePicture,
+                username: localStorage.getItem("username"),
+                password: localStorage.getItem("password"),
+            })
+        })
+            .then(res => res.json())
+            .then(res => {
+            })
+            .catch(err => {
+                console.error(err);
+            })
     }
 
     static addEventListeners() {

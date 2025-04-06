@@ -39,6 +39,7 @@
                 </div>
                 <div id="app-content">
                     <h1>Create new assistant</h1>
+                    <p id="create-assistant-error" class="hidden">AAAA</p>
                     <form id="create-assistant-form">
                         <div id="create-assistant-form-image">
                             <img id="create-assistant-form-profile-picture" src="https://placehold.co/150/707070/707070/png?text=a" alt="">
@@ -55,6 +56,9 @@
                     <canvas id="create-assistant-form-profile-picture-generator" style="display: none" height="150" width="150"></canvas>
                 </div>
             </div>
+            <script>
+                const csrftoken = '{{ csrf_token }}';
+            </script>
             <link rel="stylesheet" href="{% static 'main/style/create-assistant.css' %}">
             <link rel="stylesheet" href="{% static 'main/style/settings-app.css' %}">
         </main>

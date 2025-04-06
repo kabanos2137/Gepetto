@@ -146,3 +146,19 @@
 
     background-color: var(--button-1);
 }
+
+#create-assistant-error {
+    position: relative;
+    top: 0;
+    opacity: 1;
+    color: red;
+    transition: 0.5s;
+
+    text-align: center;
+
+    &.hidden {
+        opacity: 0;
+        color: transparent;
+        top: 25%;
+    }
+}
