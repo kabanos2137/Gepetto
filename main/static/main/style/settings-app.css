@@ -1,0 +1,137 @@
+#app-container {
+    width: 100%;
+    height: 100%;
+
+    background-color: var(--container);
+
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: row;
+    overflow-x: clip;
+}
+
+#app-settings-bar {
+    height: 100%;
+    width: 80px;
+
+    background-color: var(--background);
+
+    transition: 0.5s;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+
+    & > .app-settings-bar-group {
+        width: 80px;
+        height: auto;
+
+        transition: 0.5s;
+
+        & > .app-settings-bar-button {
+            width: 80px;
+            height: 80px;
+
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row;
+            align-items: center;
+
+            cursor: pointer;
+
+            transition: 0.5s;
+
+            & > p {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                width: 0;
+                height: 0;
+                opacity: 0;
+                padding: 0;
+
+                transition: 0.5s;
+            }
+
+            & > i {
+                width: 80px;
+                height: 80px;
+
+                font-size: 200%;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                transition: 0.5s;
+
+                &.fa-home{
+                    width: 0;
+                    height: 0;
+                    opacity: 0;
+                    padding: 0;
+                }
+
+                &.fa-angles-right:hover, &.fa-gear:hover {
+                    transform: rotate(45deg);
+                }
+
+                &.fa-door-open:hover {
+                    color: #B30000;
+                }
+            }
+        }
+    }
+
+    &.expanded {
+        width: 400px;
+
+        & > .app-settings-bar-group {
+            width: 400px;
+
+            & > .app-settings-bar-button {
+                width: 400px;
+                height: 80px;
+
+                display: flex;
+                justify-content: space-between;
+                flex-direction: row;
+                align-items: center;
+
+                cursor: pointer;
+
+                transition: 0.5s;
+
+                & > p {
+                    width: 280px;
+                    height: 80px;
+                    padding: 0 20px;
+                    opacity: 1;
+
+                    font-size: 20px;
+
+                    transition: 0.5s;
+                }
+
+                & > i {
+                    &.fa-home {
+                        width: 80px;
+                        height: 80px;
+                        opacity: 1;
+                    }
+
+                    &.fa-angles-right {
+                        transform: rotate(180deg);
+                    }
+
+                    &.fa-angles-right:hover {
+                        transform: rotate(135deg);
+                    }
+                }
+            }
+        }
+    }
+}

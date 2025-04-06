@@ -56,6 +56,7 @@ const addEventListeners = (url) => {
                 appPage.addEventListeners();
             }else if(url === "/create-assistant"){
                 appSettingsBar.addEventListeners();
+                createAssistantPage.addEventListeners();
             }
         }
     } else if(url === "/m-app") {
