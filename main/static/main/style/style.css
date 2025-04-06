@@ -33,7 +33,7 @@ main {
 }
 
 .transition-fade {
-    transition: 500ms;
+    transition: 0.5s;
     opacity: 1;
     transform: translateX(0);
     transform-origin: left;
@@ -49,19 +49,18 @@ main {
     transform: translateX(0);
 }
 
-.transition-fade-left {
-    transition: 500ms;
+.partial-transition {
+    transition: 0.5s;
     opacity: 1;
     transform: translateX(0);
-    transform-origin: right;
 }
 
-.is-animating .transition-fade-left {
+.is-animating .partial-transition {
     opacity: 1;
     transform: translateX(-100%);
 }
 
-.is-leaving .transition-fade-left {
+.is-leaving .partial-transition {
     opacity: 0;
-    transform: translateX(0);
+    transform: translateX(100%);
 }

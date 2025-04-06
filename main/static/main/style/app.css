@@ -68,6 +68,13 @@
 
                 transition: 0.5s;
 
+                &.fa-home{
+                    width: 0;
+                    height: 0;
+                    opacity: 0;
+                    padding: 0;
+                }
+
                 &.fa-angles-right:hover, &.fa-gear:hover {
                     transform: rotate(45deg);
                 }
@@ -110,6 +117,12 @@
                 }
 
                 & > i {
+                    &.fa-home {
+                        width: 80px;
+                        height: 80px;
+                        opacity: 1;
+                    }
+
                     &.fa-angles-right {
                         transform: rotate(180deg);
                     }
@@ -122,152 +135,6 @@
         }
     }
 }
-
-/*#app-settings-bar {*/
-/*    height: 100%;*/
-/*    width: 80px;*/
-
-/*    background-color: var(--background);*/
-
-/*    transition: 0.5s;*/
-
-/*    display: flex;*/
-/*    align-items: end;*/
-/*    justify-content: space-between;*/
-/*    flex-direction: column;*/
-
-/*    & > .app-settings-bar-group {*/
-/*        transition: 0.5s;*/
-
-/*        width: 100%;*/
-/*        height: auto;*/
-
-/*        margin: 0;*/
-/*        padding: 0;*/
-
-/*        & > .app-settings-bar-button {*/
-/*            display: flex;*/
-/*            justify-content: space-between;*/
-/*            flex-direction: row;*/
-/*            align-items: center;*/
-
-/*            & > p {*/
-/*                width: 0;*/
-/*                opacity: 0;*/
-
-/*                transition: 0.5s;*/
-/*            }*/
-
-/*            & > i {*/
-/*                width: 80px;*/
-/*                height: 80px;*/
-
-/*                display: flex;*/
-/*                align-items: center;*/
-/*                justify-content: center;*/
-/*                font-size: 200%;*/
-
-/*                cursor: pointer;*/
-
-/*                transition: 0.5s;*/
-
-/*                &.fa-angles-right:hover{*/
-/*                    transform: rotate(45deg);*/
-/*                }*/
-
-/*                &.fa-gear:hover {*/
-/*                    transform: rotate(45deg);*/
-/*                }*/
-
-/*                &.fa-door-open{*/
-/*                    transition: 0.3s;*/
-/*                }*/
-
-/*                &.fa-door-open:hover {*/
-/*                    color: #B30000;*/
-/*                }*/
-/*            }*/
-/*        }*/
-/*    }*/
-/*}*/
-
-/*#app-settings-bar.expanded {*/
-/*    height: 100%;*/
-/*    width: 400px;*/
-
-/*    background-color: var(--background);*/
-
-/*    display: flex;*/
-/*    align-items: end;*/
-/*    justify-content: space-between;*/
-/*    flex-direction: column;*/
-
-/*    & > .app-settings-bar-group {*/
-/*        width: 100%;*/
-/*        height: auto;*/
-
-/*        display: flex;*/
-/*        align-items: end;*/
-/*        justify-content: space-between;*/
-/*        flex-direction: column;*/
-
-/*        margin: 0;*/
-/*        padding: 0;*/
-
-/*        & > .app-settings-bar-button {*/
-/*            display: flex;*/
-/*            justify-content: space-between;*/
-/*            flex-direction: row;*/
-/*            align-items: center;*/
-
-/*            & > p {*/
-/*                opacity: 1;*/
-
-/*                width: 320px;*/
-/*                text-align: left;*/
-/*                padding: 20px;*/
-
-/*                display: flex;*/
-/*                align-items: center;*/
-/*                justify-content: center;*/
-/*            }*/
-
-/*            & > i {*/
-/*                width: 80px;*/
-/*                height: 80px;*/
-
-/*                display: flex;*/
-/*                align-items: center;*/
-/*                justify-content: center;*/
-/*                font-size: 200%;*/
-
-/*                cursor: pointer;*/
-
-/*                transition: 0.5s;*/
-
-/*                &.fa-angles-right{*/
-/*                    transform: rotate(180deg);*/
-/*                }*/
-
-/*                &.fa-angles-right:hover{*/
-/*                    transform: rotate(135deg);*/
-/*                }*/
-
-/*                &.fa-gear:hover {*/
-/*                    transform: rotate(45deg);*/
-/*                }*/
-
-/*                &.fa-door-open{*/
-/*                    transition: 0.3s;*/
-/*                }*/
-
-/*                &.fa-door-open:hover {*/
-/*                    color: #B30000;*/
-/*                }*/
-/*            }*/
-/*        }*/
-/*    }*/
-/*}*/
 
 #app-content{
     &.blurred {

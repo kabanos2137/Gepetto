@@ -1,24 +1,32 @@
 const swup = new Swup();
 
 swup.hooks.on('animation:out:start', (visit) => {
+    if (
+        (visit.from.url === '/app' && visit.to.url === '/create-assistant') ||
+        (visit.from.url === '/create-assistant' && visit.to.url === '/app')
+    ) {
+        document.body.classList.add('partial-transition');
+    }
+
     document.documentElement.classList.add('is-leaving');
     return new Promise((resolve) => {
         setTimeout(() => {
-            resolve(); // Kontynuuje po 500ms
+            resolve();
         }, 500);
     });
 });
 
-swup.hooks.on("page:view", (visit) => {
-    addEventListeners(visit.to.url)
-});
-
-window.addEventListener("load", (event) => {
-    addEventListeners(window.location.pathname)
-})
-
 swup.hooks.on('content:replace', () => {
     document.documentElement.classList.remove('is-leaving');
+    document.body.classList.remove('partial-transition');
+});
+
+swup.hooks.on("page:view", (visit) => {
+    addEventListeners(visit.to.url);
+});
+
+window.addEventListener("load", () => {
+    addEventListeners(window.location.pathname);
 });
 
 const addEventListeners = (url) => {
@@ -29,43 +37,32 @@ const addEventListeners = (url) => {
         if(username === null || password === null){
             document.getElementById("create-acc-form").reset();
             createAccountForm.addEventListeners();
-        }else {
-            if(isMobile(window)) {
-                swup.navigate("/m-app")
-            }else{
-                swup.navigate("/app")
-            }
+        } else {
+            swup.navigate(isMobile(window) ? "/m-app" : "/app");
         }
-    }else if(url === "/"){
+    } else if(url === "/"){
         if(username === null || password === null){
             document.getElementById("log-in-form").reset();
             logInForm.addEventListeners();
-        }else {
-            if(isMobile(window)) {
-                swup.navigate("/m-app")
-            }else{
-                swup.navigate("/app")
-            }
-        }
-    }else if(url === "/app") {
-        if (username === null || password === null) {
-            swup.navigate("/")
         } else {
-            if(isMobile(window)) {
-                swup.navigate("/m-app")
-            }else{
+            swup.navigate(isMobile(window) ? "/m-app" : "/app");
+        }
+    } else if(url === "/app" || url === "/create-assistant") {
+        if(username === null || password === null) {
+            swup.navigate("/");
+        } else {
+            if(url === "/app") {
+                appSettingsBar.addEventListeners();
                 appPage.addEventListeners();
+            }else if(url === "/create-assistant"){
+                appSettingsBar.addEventListeners();
             }
         }
-    }else if(url === "/m-app") {
-        if (username === null || password === null) {
-            swup.navigate("/")
+    } else if(url === "/m-app") {
+        if(username === null || password === null) {
+            swup.navigate("/");
         } else {
-            if(isMobile(window)) {
-
-            }else{
-                swup.navigate("/app")
-            }
+            swup.navigate(isMobile(window) ? null : "/app");
         }
     }
 }

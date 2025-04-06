@@ -13,5 +13,8 @@ def create_acc_success(request):
 def app(request):
     return render(request, "main/app.html")
 
+def create_assistant(request):
+    return render(request, "main/create-assistant.html")
+
 def m_app(request):
     return render(request, "main/m-app.html")
