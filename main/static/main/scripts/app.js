@@ -21,5 +21,13 @@ class appPage {
         document.getElementById("app-settings-bar-expand").addEventListener("click", (event) => {
             this.expandEventListener(event);
         })
+
+        document.getElementById("app-settings-bar-logoff-p").addEventListener("click", (event) => {
+            this.logoffEventListener(event);
+        });
+
+        document.getElementById("app-settings-bar-expand-p").addEventListener("click", (event) => {
+            this.expandEventListener(event);
+        })
     }
 }

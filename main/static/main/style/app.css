@@ -20,112 +20,258 @@
     transition: 0.5s;
 
     display: flex;
-    align-items: end;
+    align-items: center;
     justify-content: space-between;
     flex-direction: column;
 
-    & > div {
-        transition: 0.5s;
-
-        width: 100%;
-        height: auto;
-
-        margin: 0;
-        padding: 0;
-
-        & > i {
-            width: 80px;
-            height: 80px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 200%;
-
-            cursor: pointer;
-
-            transition: 0.5s;
-
-            &.fa-angles-right:hover{
-                transform: rotate(45deg);
-            }
-
-            &.fa-gear:hover {
-                transform: rotate(45deg);
-            }
-
-            &.fa-door-open{
-                transition: 0.3s;
-            }
-
-            &.fa-door-open:hover {
-                color: #B30000;
-            }
-        }
-    }
-}
-
-#app-settings-bar.expanded {
-    height: 100%;
-    width: 360px;
-
-    background-color: var(--background);
-
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    flex-direction: column;
-
-    & > div {
+    & > .app-settings-bar-group {
         width: 80px;
         height: auto;
 
-        display: flex;
-        align-items: end;
-        justify-content: space-between;
-        flex-direction: column;
+        transition: 0.5s;
 
-        margin: 0;
-        padding: 0;
-
-        & > i {
+        & > .app-settings-bar-button {
             width: 80px;
             height: 80px;
 
             display: flex;
+            justify-content: space-between;
+            flex-direction: row;
             align-items: center;
-            justify-content: center;
-            font-size: 200%;
 
             cursor: pointer;
 
             transition: 0.5s;
 
-            &.fa-angles-right{
-                transform: rotate(180deg);
+            & > p {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                width: 0;
+                height: 0;
+                opacity: 0;
+                padding: 0;
+
+                transition: 0.5s;
             }
 
-            &.fa-angles-right:hover{
-                transform: rotate(135deg);
-            }
+            & > i {
+                width: 80px;
+                height: 80px;
 
-            &.fa-gear:hover {
-                transform: rotate(45deg);
-            }
+                font-size: 200%;
 
-            &.fa-door-open{
-                transition: 0.3s;
-            }
+                display: flex;
+                align-items: center;
+                justify-content: center;
 
-            &.fa-door-open:hover {
-                color: #B30000;
+                transition: 0.5s;
+
+                &.fa-angles-right:hover, &.fa-gear:hover {
+                    transform: rotate(45deg);
+                }
+
+                &.fa-door-open:hover {
+                    color: #B30000;
+                }
+            }
+        }
+    }
+
+    &.expanded {
+        width: 400px;
+
+        & > .app-settings-bar-group {
+            width: 400px;
+
+            & > .app-settings-bar-button {
+                width: 400px;
+                height: 80px;
+
+                display: flex;
+                justify-content: space-between;
+                flex-direction: row;
+                align-items: center;
+
+                cursor: pointer;
+
+                transition: 0.5s;
+
+                & > p {
+                    width: 280px;
+                    height: 80px;
+                    padding: 0 20px;
+                    opacity: 1;
+
+                    font-size: 20px;
+
+                    transition: 0.5s;
+                }
+
+                & > i {
+                    &.fa-angles-right {
+                        transform: rotate(180deg);
+                    }
+
+                    &.fa-angles-right:hover {
+                        transform: rotate(135deg);
+                    }
+                }
             }
         }
     }
 }
 
+/*#app-settings-bar {*/
+/*    height: 100%;*/
+/*    width: 80px;*/
+
+/*    background-color: var(--background);*/
+
+/*    transition: 0.5s;*/
+
+/*    display: flex;*/
+/*    align-items: end;*/
+/*    justify-content: space-between;*/
+/*    flex-direction: column;*/
+
+/*    & > .app-settings-bar-group {*/
+/*        transition: 0.5s;*/
+
+/*        width: 100%;*/
+/*        height: auto;*/
+
+/*        margin: 0;*/
+/*        padding: 0;*/
+
+/*        & > .app-settings-bar-button {*/
+/*            display: flex;*/
+/*            justify-content: space-between;*/
+/*            flex-direction: row;*/
+/*            align-items: center;*/
+
+/*            & > p {*/
+/*                width: 0;*/
+/*                opacity: 0;*/
+
+/*                transition: 0.5s;*/
+/*            }*/
+
+/*            & > i {*/
+/*                width: 80px;*/
+/*                height: 80px;*/
+
+/*                display: flex;*/
+/*                align-items: center;*/
+/*                justify-content: center;*/
+/*                font-size: 200%;*/
+
+/*                cursor: pointer;*/
+
+/*                transition: 0.5s;*/
+
+/*                &.fa-angles-right:hover{*/
+/*                    transform: rotate(45deg);*/
+/*                }*/
+
+/*                &.fa-gear:hover {*/
+/*                    transform: rotate(45deg);*/
+/*                }*/
+
+/*                &.fa-door-open{*/
+/*                    transition: 0.3s;*/
+/*                }*/
+
+/*                &.fa-door-open:hover {*/
+/*                    color: #B30000;*/
+/*                }*/
+/*            }*/
+/*        }*/
+/*    }*/
+/*}*/
+
+/*#app-settings-bar.expanded {*/
+/*    height: 100%;*/
+/*    width: 400px;*/
+
+/*    background-color: var(--background);*/
+
+/*    display: flex;*/
+/*    align-items: end;*/
+/*    justify-content: space-between;*/
+/*    flex-direction: column;*/
+
+/*    & > .app-settings-bar-group {*/
+/*        width: 100%;*/
+/*        height: auto;*/
+
+/*        display: flex;*/
+/*        align-items: end;*/
+/*        justify-content: space-between;*/
+/*        flex-direction: column;*/
+
+/*        margin: 0;*/
+/*        padding: 0;*/
+
+/*        & > .app-settings-bar-button {*/
+/*            display: flex;*/
+/*            justify-content: space-between;*/
+/*            flex-direction: row;*/
+/*            align-items: center;*/
+
+/*            & > p {*/
+/*                opacity: 1;*/
+
+/*                width: 320px;*/
+/*                text-align: left;*/
+/*                padding: 20px;*/
+
+/*                display: flex;*/
+/*                align-items: center;*/
+/*                justify-content: center;*/
+/*            }*/
+
+/*            & > i {*/
+/*                width: 80px;*/
+/*                height: 80px;*/
+
+/*                display: flex;*/
+/*                align-items: center;*/
+/*                justify-content: center;*/
+/*                font-size: 200%;*/
+
+/*                cursor: pointer;*/
+
+/*                transition: 0.5s;*/
+
+/*                &.fa-angles-right{*/
+/*                    transform: rotate(180deg);*/
+/*                }*/
+
+/*                &.fa-angles-right:hover{*/
+/*                    transform: rotate(135deg);*/
+/*                }*/
+
+/*                &.fa-gear:hover {*/
+/*                    transform: rotate(45deg);*/
+/*                }*/
+
+/*                &.fa-door-open{*/
+/*                    transition: 0.3s;*/
+/*                }*/
+
+/*                &.fa-door-open:hover {*/
+/*                    color: #B30000;*/
+/*                }*/
+/*            }*/
+/*        }*/
+/*    }*/
+/*}*/
+
 #app-content{
     &.blurred {
+        transform: translateX(320px);
         filter: blur(5px);
     }
 
@@ -145,7 +291,7 @@
     }
 
     & > h1, & > h2 {
-
+        margin: 5px;
     }
 
     & u {
