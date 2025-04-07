@@ -1,8 +1,10 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from setuptools.command.bdist_egg import can_scan
 
-from api.models import UserCredentials
+from api.models import UserCredentials, Assistant, AssistantPermissions
+
 
 @api_view(['GET', 'POST'])
 def user(_request):
@@ -84,6 +86,7 @@ def login(_request):
 @api_view(['POST', 'GET'])
 def assistant(_request):
     if _request.method == 'POST':
+        print(_request.data)
         _name = _request.data['assistant_name']
         _description = _request.data['description']
         _response_style = _request.data['response_style']
@@ -92,7 +95,35 @@ def assistant(_request):
         _username = _request.data['username']
         _password = _request.data['password']
 
-        return Response(
-            {},
+        _user = UserCredentials.objects.filter(name=_username, password=_password)
+
+        if not _user.exists():
+            return Response(
+                {
+                "message": "User not found"
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        _assistant = Assistant.objects.create(
+            name = _name,
+            description = _description,
+            response_style = _response_style,
+            tone = _tone,
+            profile_picture = _profile_picture
+        )
+
+        AssistantPermissions.objects.create(
+            user = _user.get(),
+            assistant = _assistant,
+            can_edit = True,
+            can_delete = True,
+            can_view = True
+        )
+
+        return Response (
+            {
+                "assistant_id": _assistant.id
+            },
             status=status.HTTP_201_CREATED
         )

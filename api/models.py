@@ -10,3 +10,17 @@ class UserCredentials(models.Model):
 
     def __str__(self):
         return self.name
+
+class Assistant(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    response_style = models.TextField()
+    tone = models.TextField()
+    profile_picture = models.TextField()
+
+class AssistantPermissions(models.Model):
+    user = models.ForeignKey(UserCredentials, on_delete=models.CASCADE)
+    assistant = models.ForeignKey(Assistant, on_delete=models.CASCADE)
+    can_edit = models.BooleanField(default=False)
+    can_delete = models.BooleanField(default=False)
+    can_view = models.BooleanField(default=False)

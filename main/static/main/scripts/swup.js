@@ -55,6 +55,7 @@ const addEventListeners = (url) => {
                 appSettingsBar.addEventListeners();
                 appPage.addEventListeners();
             }else if(url === "/create-assistant"){
+                document.getElementById("create-assistant-form").reset();
                 appSettingsBar.addEventListeners();
                 createAssistantPage.addEventListeners();
             }
