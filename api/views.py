@@ -127,3 +127,86 @@ def assistant(_request):
             },
             status=status.HTTP_201_CREATED
         )
+    elif _request.method == 'GET':
+        _username = _request.GET['username']
+        _password = _request.GET['password']
+        _user = UserCredentials.objects.filter(name=_username, password=_password)
+
+        if not _user.exists():
+            return Response(
+                {
+                    "message": "User not found"
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        if "assistant_id" in _request.GET:
+            _assistant_id = _request.GET["assistant_id"]
+            _assistant = Assistant.objects.filter(id=_assistant_id)
+            if not _assistant.exists():
+                return Response(
+                    {
+                        "message": "Assistant not found"
+                    },
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            _assistant_permissions = AssistantPermissions.objects.filter(
+                user=_user.get(),
+                assistant=_assistant.get()
+            )
+
+            if not _assistant_permissions.exists() or not _assistant_permissions.get().can_view:
+                return Response(
+                    {
+                        "message": "You do not have permission to view this assistant"
+                    },
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+
+            _assistant = _assistant.get()
+
+            return Response(
+                {
+                    "assistant_id": _assistant.id,
+                    "assistant_name": _assistant.name,
+                    "description": _assistant.description,
+                    "response_style": _assistant.response_style,
+                    "tone": _assistant.tone,
+                    "profile_picture": _assistant.profile_picture
+                }, status=status.HTTP_200_OK
+            )
+        else:
+            _username = _request.GET['username']
+            _password = _request.GET['password']
+            _user = UserCredentials.objects.filter(name=_username, password=_password)
+
+            if not _user.exists():
+                return Response(
+                    {
+                        "message": "User not found"
+                    },
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+
+            _permissions = AssistantPermissions.objects.filter(user=_user.get())
+
+            _assistants = []
+
+            for _permission in _permissions:
+                _assistants.append({
+                    "id": _permission.assistant.id,
+                    "name": _permission.assistant.name,
+                    "description": _permission.assistant.description,
+                    "response_style": _permission.assistant.response_style,
+                    "tone": _permission.assistant.tone,
+                    "profile_picture": _permission.assistant.profile_picture
+                })
+
+            return Response(
+                {
+                    "assistants": _assistants
+                },
+                status=status.HTTP_200_OK
+            )
+
