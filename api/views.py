@@ -1,12 +1,28 @@
-import json
+import os
 
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from dotenv import load_dotenv
 
 from api.models import UserCredentials, Assistant, AssistantPermissions, Conversation, ConversationPermissions, \
     ConversationMessage
+from openai import AzureOpenAI
 
+load_dotenv("./.confidential.env")
+
+client = AzureOpenAI(
+    azure_endpoint=os.getenv('OPENAI_API_BASE'),
+    api_key=os.getenv('OPENAI_API_KEY'),
+    api_version="2024-05-01-preview",
+)
+
+def build_system_prompt(description: str, response_style: str, tone: str) -> str:
+    return (
+        f"You are an assistant with the following role: {description}.\n"
+        f"Respond in a {response_style} style and keep your tone {tone}.\n"
+        f"Adapt your language and structure accordingly."
+    )
 
 @api_view(['GET', 'POST'])
 def user(_request):
@@ -360,3 +376,79 @@ def conversation(_request):
                 status=status.HTTP_200_OK
             )
 
+@api_view(['POST'])
+def message(_request):
+    if _request.method == "POST":
+        _message = _request.data['message']
+        _conversation_id = _request.data['conversation_id']
+        _username = _request.data['username']
+        _password = _request.data['password']
+
+        _user = UserCredentials.objects.filter(name=_username, password=_password)
+
+        if not _user.exists():
+            return Response(
+                {
+                    "message": "User not found"
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        _conversation = Conversation.objects.filter(id=_conversation_id)
+        if not _conversation.exists():
+            return Response(
+                {
+                    "message": "Conversation not found"
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        _conversation_permissions = ConversationPermissions.objects.filter(
+            user=_user.get(),
+            conversation=_conversation.get()
+        )
+
+        if not _conversation_permissions.exists() or not _conversation_permissions.get().can_edit:
+            return Response(
+                {
+                    "message": "You do not have permission to edit this assistant"
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        _conversation = _conversation.get()
+        _assistant = _conversation.assistant
+
+        ConversationMessage.objects.create(
+            conversation=_conversation,
+            message=_message,
+            sent_by=_user.get(),
+        )
+
+        _conversation_messages = ConversationMessage.objects.filter(conversation=_conversation)
+
+        _messages = [{
+            "role": "system",
+            "content": build_system_prompt(_assistant.description, _assistant.response_style, _assistant.tone)
+        }]
+
+        for _old_message in _conversation_messages:
+            _messages.append({
+                "role": "assistant" if _old_message.sent_by.id == 0 else "user",
+                "content": _old_message.message
+            })
+
+        response = client.chat.completions.create(
+            model="gpt-4-ai-model",
+            messages=_messages,
+        )
+
+        ConversationMessage.objects.create(
+            conversation=_conversation,
+            message=response.choices[0].message.content,
+            sent_by=UserCredentials.objects.filter(id=0),
+        )
+
+        return Response({
+            "message": response.choices[0].message.content
+        }, status=status.HTTP_200_OK)

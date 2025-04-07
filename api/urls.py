@@ -1,22 +1,11 @@
-import os
-
 from django.urls import path
-from dotenv import load_dotenv
 
-from .views import user, login, assistant, conversation
-from openai import AzureOpenAI
-
-load_dotenv("./.confidential.env")
-
-client = AzureOpenAI(
-    azure_endpoint=os.getenv('OPENAI_API_BASE'),
-    api_key=os.getenv('OPENAI_API_KEY'),
-    api_version="2024-05-01-preview",
-)
+from .views import user, login, assistant, conversation, message
 
 urlpatterns = [
     path("user", user, name="user"),
     path("login", login, name="login"),
     path("assistant", assistant, name="assistant"),
     path("conversation", conversation, name="conversation"),
+    path("message", message, name="message")
 ]

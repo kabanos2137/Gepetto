@@ -39,7 +39,7 @@ class ConversationPermissions(models.Model):
 
 class ConversationMessage(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
-    message = models.JSONField() # [{ type: text, message: string }, { type: image, message: string }] etc.
+    message = models.TextField()
     date_of_creation = models.DateTimeField(auto_now_add=True)
     sent_by = models.ForeignKey(UserCredentials, on_delete=models.CASCADE)
 
