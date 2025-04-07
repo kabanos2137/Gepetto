@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Gepetto</title>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'main/style/style.css' %}">
+        <script defer src="{% static 'main/scripts/swup.umd.js' %}"></script>
+        <script defer src="{% static 'main/scripts/swup.js' %}"></script>
+        <script defer src="{% static 'main/scripts/utils.js' %}"></script>
+        <script defer src="{% static 'main/scripts/create-acc.js' %}"></script>
+        <script defer src="{% static 'main/scripts/login.js' %}"></script>
+        <script defer src="{% static 'main/scripts/app.js' %}"></script>
+        <script defer>
+            const csrftoken = '{{ csrf_token }}';
+        </script>
+    </head>
+    <body>
+        <main id="swup" class="transition-fade">
+            <div id="app-container">
+                <div id="app-settings-bar">
+                    <div class="app-settings-bar-group">
+                        <div class="app-settings-bar-button">
+                            <i id="app-settings-bar-home" class="fa-solid fa-home"></i>
+                            <i id="app-settings-bar-expand" class="fa-solid fa-angles-right"></i>
+                        </div>
+                    </div>
+                    <div class="app-settings-bar-group">
+                        <div class="app-settings-bar-button">
+                            <p id="app-settings-bar-settings-p">Settings</p>
+                            <i id="app-settings-bar-settings" class="fa-solid fa-gear"></i>
+                        </div>
+                        <div class="app-settings-bar-button">
+                            <p id="app-settings-bar-logoff-p">Log out</p>
+                            <i id="app-settings-bar-logoff" class="fa-solid fa-door-open"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="app-content">
+
+                </div>
+            </div>
+            <link rel="stylesheet" href="{% static 'main/style/assistant.css' %}">
+            <link rel="stylesheet" href="{% static 'main/style/settings-app.css' %}">
+        </main>
+    </body>
+</html>

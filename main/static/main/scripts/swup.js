@@ -47,7 +47,7 @@ const addEventListeners = (url) => {
         } else {
             swup.navigate(isMobile(window) ? "/m-app" : "/app");
         }
-    } else if(url === "/app" || url === "/create-assistant") {
+    } else if(url === "/app" || url === "/create-assistant" || url.split("?")[0] === "/assistant") {
         if(username === null || password === null) {
             swup.navigate("/");
         } else {
@@ -58,6 +58,9 @@ const addEventListeners = (url) => {
                 document.getElementById("create-assistant-form").reset();
                 appSettingsBar.addEventListeners();
                 createAssistantPage.addEventListeners();
+            }else if(url.split("?")[0] === "/assistant"){
+                appSettingsBar.addEventListeners();
+                assistantPage.addEventListeners();
             }
         }
     } else if(url === "/m-app") {

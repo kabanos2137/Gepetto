@@ -44,8 +44,8 @@ class appPage {
         })
             .then(res => res.json())
             .then(res => {
-                let assistants = res.assistants;
-                if(assistants.length > 0) {
+                if(res.assistants && res.assistants.length > 0) {
+                    let assistants = res.assistants;
                     appContent.style.justifyContent = "flex-start"
 
                     appContent.innerHTML = `
@@ -57,7 +57,7 @@ class appPage {
                             <div class="app-content-assistant">
                                 <img src="${assistant.profile_picture}">
                                 <div>
-                                    <h3>${assistant.name}</h3>
+                                    <h3 onclick="swup.navigate('/assistant?id=${assistant.id}')">${assistant.name}</h3>
                                     <h4>${assistant.description}</h4>
                                 </div>
                             </div>
@@ -152,6 +152,7 @@ class createAssistantPage {
         })
             .then(res => res.json())
             .then(res => {
+                swup.navigate(`/assistant?id=${res.assistant_id}`);
             })
             .catch(err => {
                 console.error(err);
@@ -175,5 +176,29 @@ class createAssistantPage {
         document.getElementById("create-assistant-submit").addEventListener("click", (event) => {
             this.createEventListener(event);
         })
+    }
+}
+
+class assistantPage {
+    static getAssistant() {
+        const params = new URLSearchParams(window.location.search);
+
+        let assistantID = params.get("id");
+
+        fetch(`/api/assistant?id=${assistantID}&username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                'X-CSRFToken': csrftoken
+            },
+        })
+            .then(res => res.json())
+            .then(res => {
+            })
+            .catch(err => console.log(err));
+    }
+
+    static addEventListeners() {
+        this.getAssistant();
     }
 }

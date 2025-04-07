@@ -16,5 +16,8 @@ def app(request):
 def create_assistant(request):
     return render(request, "main/create-assistant.html")
 
+def assistant(request):
+    return render(request, "main/assistant.html")
+
 def m_app(request):
     return render(request, "main/m-app.html")

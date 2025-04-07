@@ -87,6 +87,8 @@
 
             transition: 0.25s;
 
+            cursor: pointer;
+
             &:hover {
                 text-decoration: underline var(--container);
             }
