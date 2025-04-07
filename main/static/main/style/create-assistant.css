@@ -104,13 +104,11 @@
 
         &::-webkit-scrollbar-thumb {
             background-color: #A9A9A990;
-            border-radius: 25px;
             cursor: pointer;
         }
 
         &::-webkit-scrollbar-thumb:hover {
             background-color: #A9A9A9FF;
-            border-radius: 20px;
         }
     }
 }

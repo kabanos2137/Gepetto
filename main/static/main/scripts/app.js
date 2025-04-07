@@ -33,14 +33,58 @@ class appSettingsBar {
 }
 
 class appPage {
+    static getAssistants() {
+        let appContent = document.getElementById("app-content");
+        fetch(`/api/assistant?username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                'X-CSRFToken': csrftoken
+            },
+        })
+            .then(res => res.json())
+            .then(res => {
+                let assistants = res.assistants;
+                if(assistants.length > 0) {
+                    appContent.style.justifyContent = "flex-start"
+
+                    appContent.innerHTML = `
+                        <h1>Your assistants</h1>
+                    `;
+
+                    assistants.forEach(assistant => {
+                        appContent.innerHTML += `
+                            <div class="app-content-assistant">
+                                <img src="${assistant.profile_picture}">
+                                <div>
+                                    <h3>${assistant.name}</h3>
+                                    <h4>${assistant.description}</h4>
+                                </div>
+                            </div>
+                        `
+                    });
+                } else {
+                    appContent.style.justifyContent = "center"
+
+                    appContent.innerHTML = `
+                        <h1>Gepetto</h1>
+                        <h2>Hmm, it's a bit empty here, isn't it? Maybe <u id="app-content-create-assistant">let's create your first assistant?</u></h2>
+                    `;
+
+                    document.getElementById("app-content-create-assistant").addEventListener("click", (event) => {
+                        this.contentCreateAssistantEventListener(event);
+                    })
+                }
+            })
+            .catch(err => console.log(err));
+    }
+
     static contentCreateAssistantEventListener(event) {
         swup.navigate("/create-assistant");
     }
 
     static addEventListeners() {
-        document.getElementById("app-content-create-assistant").addEventListener("click", (event) => {
-            this.contentCreateAssistantEventListener(event);
-        })
+        this.getAssistants();
     }
 }
 

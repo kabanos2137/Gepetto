@@ -15,6 +15,9 @@
         <script defer src="{% static 'main/scripts/create-acc.js' %}"></script>
         <script defer src="{% static 'main/scripts/login.js' %}"></script>
         <script defer src="{% static 'main/scripts/app.js' %}"></script>
+        <script defer>
+            const csrftoken = '{{ csrf_token }}';
+        </script>
     </head>
     <body>
         <main id="swup" class="transition-fade">
@@ -56,9 +59,6 @@
                     <canvas id="create-assistant-form-profile-picture-generator" style="display: none" height="150" width="150"></canvas>
                 </div>
             </div>
-            <script defer>
-                const csrftoken = '{{ csrf_token }}';
-            </script>
             <link rel="stylesheet" href="{% static 'main/style/create-assistant.css' %}">
             <link rel="stylesheet" href="{% static 'main/style/settings-app.css' %}">
         </main>

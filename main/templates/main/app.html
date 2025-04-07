@@ -15,6 +15,9 @@
         <script defer src="{% static 'main/scripts/create-acc.js' %}"></script>
         <script defer src="{% static 'main/scripts/login.js' %}"></script>
         <script defer src="{% static 'main/scripts/app.js' %}"></script>
+        <script defer>
+            const csrftoken = '{{ csrf_token }}';
+        </script>
     </head>
     <body>
         <main id="swup" class="transition-fade">
@@ -38,8 +41,7 @@
                     </div>
                 </div>
                 <div id="app-content">
-                    <h1>Gepetto</h1>
-                    <h2>Hmm, it's a bit empty here, isn't it? Maybe <u id="app-content-create-assistant">let's create your first assistant?</u></h2>
+                    <h1>Loading...</h1>
                 </div>
             </div>
             <link rel="stylesheet" href="{% static 'main/style/app.css' %}">
