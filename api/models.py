@@ -30,6 +30,13 @@ class Conversation(models.Model):
     name = models.CharField(max_length=100)
     date_of_creation = models.DateTimeField(auto_now_add=True)
 
+class ConversationPermissions(models.Model):
+    user = models.ForeignKey(UserCredentials, on_delete=models.CASCADE)
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+    can_edit = models.BooleanField(default=False)
+    can_delete = models.BooleanField(default=False)
+    can_view = models.BooleanField(default=False)
+
 class ConversationMessage(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
     message = models.JSONField() # [{ type: text, message: string }, { type: image, message: string }] etc.

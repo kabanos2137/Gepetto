@@ -3,7 +3,7 @@ import os
 from django.urls import path
 from dotenv import load_dotenv
 
-from .views import user, login, assistant
+from .views import user, login, assistant, conversation
 from openai import AzureOpenAI
 
 load_dotenv("./.confidential.env")
@@ -18,4 +18,5 @@ urlpatterns = [
     path("user", user, name="user"),
     path("login", login, name="login"),
     path("assistant", assistant, name="assistant"),
+    path("conversation", conversation, name="conversation"),
 ]

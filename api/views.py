@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from api.models import UserCredentials, Assistant, AssistantPermissions
+from api.models import UserCredentials, Assistant, AssistantPermissions, Conversation, ConversationPermissions
 
 
 @api_view(['GET', 'POST'])
@@ -50,7 +50,6 @@ def user(_request):
                 "found": False
             }, status=status.HTTP_400_BAD_REQUEST)
     elif _request.method == 'POST': # check if request method is POST
-        print(_request.data) # print request data for debugging
         _username = _request.data['username'] # get username from request
         _password = _request.data['password'] # get password from request
         _email = _request.data['email'] # get email from request
@@ -72,7 +71,6 @@ def login(_request):
     if _request.method == 'GET':
         _username = _request.GET['username']
         _password = _request.GET['password']
-        print(_username)
         _user = UserCredentials.objects.filter(name=_username, password=_password)
         if _user.exists() and _username != "assistant":
             return Response({
@@ -86,7 +84,6 @@ def login(_request):
 @api_view(['POST', 'GET'])
 def assistant(_request):
     if _request.method == 'POST':
-        print(_request.data)
         _name = _request.data['assistant_name']
         _description = _request.data['description']
         _response_style = _request.data['response_style']
@@ -209,3 +206,61 @@ def assistant(_request):
                 },
                 status=status.HTTP_200_OK
             )
+
+@api_view(['POST', 'GET', 'PATCH'])
+def conversation(_request):
+    if _request.method == 'POST':
+        _name = _request.data['conversation_name']
+        _assistant_id = _request.data['assistant_id']
+        _username = _request.data['username']
+        _password = _request.data['password']
+
+        _user = UserCredentials.objects.filter(name=_username, password=_password)
+        if not _user.exists():
+            return Response(
+                {
+                    "message": "User not found"
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        _assistant = Assistant.objects.filter(id=_assistant_id)
+
+        if not _assistant.exists():
+            return Response(
+                {
+                    "message": "Assistant not found"
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        _permissions = AssistantPermissions.objects.filter(user=_user.get(), assistant_id=_assistant.get(), can_edit = True)
+
+        if not _permissions.exists():
+            return Response(
+                {
+                    "message": "User does not have permission to create conversation"
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        _conversation = Conversation.objects.create(
+            name = _name,
+            assistant = _assistant.get()
+        )
+
+        ConversationPermissions.objects.create(
+            user = _user.get(),
+            conversation = _conversation,
+            can_edit = True,
+            can_delete = True,
+            can_view = True
+        )
+
+        return Response(
+            {
+                "conversation_id": _conversation.id
+            },
+            status=status.HTTP_201_CREATED
+        )
+

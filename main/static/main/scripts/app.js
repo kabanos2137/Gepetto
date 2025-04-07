@@ -181,6 +181,26 @@ class createAssistantPage {
 }
 
 class assistantPage {
+    static createConversationEventListener(event) {
+        fetch("/api/conversation", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                conversation_name: "New conversation",
+                assistant_id: new URLSearchParams(window.location.search).get("id"),
+                username: localStorage.getItem("username"),
+                password: localStorage.getItem("password"),
+            })
+        })
+            .then(res => res.json())
+            .then(res => {
+                swup.navigate(`/conversation?id=${res.conversation_id}`)
+            })
+    }
+
     static getAssistant() {
         const params = new URLSearchParams(window.location.search);
 
@@ -218,6 +238,10 @@ class assistantPage {
                         <p>You two haven't talked yet. <u id="assistant-content-create-conversation">Maybe it's a good time to do it?</u></p>
                     </div>
                 `
+
+                document.getElementById("assistant-content-create-conversation").addEventListener("click", (event) => {
+                    this.createConversationEventListener(event);
+                });
             })
             .catch(err => console.log(err));
     }
