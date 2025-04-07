@@ -235,13 +235,50 @@ class assistantPage {
                     </div>
                     <div id="assistant-content">
                         <h1>Conversations</h1>
-                        <p>You two haven't talked yet. <u id="assistant-content-create-conversation">Maybe it's a good time to do it?</u></p>
+                        <p>Loading...</p>
                     </div>
-                `
+                `//<p></p>
 
-                document.getElementById("assistant-content-create-conversation").addEventListener("click", (event) => {
-                    this.createConversationEventListener(event);
-                });
+                fetch(`/api/conversation?username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}&assistant_id=${assistantID}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        if(res.conversations.length === 0){
+                            document.querySelector("#assistant-content > p").innerHTML = "You two haven't talked yet. <u id=\"assistant-content-create-conversation\">Maybe it's a good time to do it?</u>"
+                            document.getElementById("assistant-content-create-conversation").addEventListener("click", (event) => {
+                                this.createConversationEventListener(event);
+                            });
+                        }else{
+                            document.querySelector("#assistant-content > p").remove();
+
+                            let assistantContent = document.getElementById("assistant-content");
+
+                            res.conversations.forEach(conversation => {
+                                let date = new Date(conversation.date_of_creation)
+
+                                const formatted = date.toLocaleString("en-GB", {
+                                    day: "2-digit",
+                                    month: "long",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                });
+
+                                assistantContent.innerHTML += `
+                                    <div class="assistant-content-conversation">
+                                        <h1 onclick="swup.navigate('/conversation?id=${conversation.id}')">${conversation.name}</h1>
+                                        <h3>${formatted}</h3>
+                                    </div>
+                                `
+                            });
+                        }
+                    })
+                    .catch(err => console.log(err));
             })
             .catch(err => console.log(err));
     }

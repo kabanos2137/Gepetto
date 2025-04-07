@@ -42,3 +42,6 @@ class ConversationMessage(models.Model):
     message = models.JSONField() # [{ type: text, message: string }, { type: image, message: string }] etc.
     date_of_creation = models.DateTimeField(auto_now_add=True)
     sent_by = models.ForeignKey(UserCredentials, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.sent_by} on {self.date_of_creation} - ${self.message}'

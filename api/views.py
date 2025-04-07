@@ -1,8 +1,11 @@
+import json
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from api.models import UserCredentials, Assistant, AssistantPermissions, Conversation, ConversationPermissions
+from api.models import UserCredentials, Assistant, AssistantPermissions, Conversation, ConversationPermissions, \
+    ConversationMessage
 
 
 @api_view(['GET', 'POST'])
@@ -263,4 +266,97 @@ def conversation(_request):
             },
             status=status.HTTP_201_CREATED
         )
+    elif _request.method == 'GET':
+        _username = _request.GET['username']
+        _password = _request.GET['password']
+        _user = UserCredentials.objects.filter(name=_username, password=_password)
+
+        if not _user.exists():
+            return Response(
+                {
+                    "message": "User not found"
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        if "conversation_id" in _request.GET:
+            _conversation_id = _request.GET["conversation_id"]
+            _conversation = Conversation.objects.filter(id=_conversation_id)
+            if not _conversation.exists():
+                return Response(
+                    {
+                        "message": "Conversation not found"
+                    },
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            _conversation_permissions = ConversationPermissions.objects.filter(
+                user=_user.get(),
+                conversation=_conversation.get()
+            )
+
+            if not _conversation_permissions.exists() or not _conversation_permissions.get().can_view:
+                return Response(
+                    {
+                        "message": "You do not have permission to view this assistant"
+                    },
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+
+            _conversation = _conversation.get()
+
+            _conversation_messages = ConversationMessage.objects.filter(conversation=_conversation)
+
+            return Response(
+                {
+                    "conversation_id": _conversation.id,
+                    "conversation_name": _conversation.name,
+                    "date_of_creation": _conversation.date_of_creation,
+                    "assistant_id": _conversation.assistant.id,
+                    "assistant_name": _conversation.assistant.name,
+                    "messages": [
+                        {
+                            "message_id": _message.id,
+                            "message": _message.message,
+                            "date_of_creation": _message.date_of_creation,
+                            "sent_by": _message.sent_by.id
+                        } for _message in _conversation_messages
+                    ]
+                },
+                status=status.HTTP_200_OK
+            )
+        else:
+            _username = _request.GET['username']
+            _password = _request.GET['password']
+            _assistant_id = _request.GET['assistant_id']
+            _user = UserCredentials.objects.filter(name=_username, password=_password)
+
+            if not _user.exists():
+                return Response(
+                    {
+                        "message": "User not found"
+                    },
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+
+            _assistant = Assistant.objects.filter(id=_assistant_id)
+
+            _permissions = ConversationPermissions.objects.filter(user=_user.get(), can_view = True)
+
+            _conversations = []
+
+            for _permission in _permissions:
+                if _permission.conversation.assistant.id == _assistant.get().id:
+                    _conversations.append({
+                        "id": _permission.conversation.id,
+                        "name": _permission.conversation.name,
+                        "date_of_creation": _permission.conversation.date_of_creation
+                    })
+
+            return Response(
+                {
+                    "conversations": _conversations
+                },
+                status=status.HTTP_200_OK
+            )
 

@@ -105,3 +105,27 @@
         text-align: center;
     }
 }
+
+.assistant-content-conversation {
+    background-color: var(--secondary);
+    color: var(--container);
+    padding: 20px;
+
+    border-radius: 20px;
+
+    & > h1, & > h3 {
+        margin: 5px;
+
+        transition: text-decoration 0.5s;
+
+        text-decoration: underline transparent;
+    }
+    
+    & > h1 {
+        cursor: pointer;
+    }
+
+    & > h1:hover {
+        text-decoration: underline var(--container);
+    }
+}
