@@ -1,7 +1,6 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from setuptools.command.bdist_egg import can_scan
 
 from api.models import UserCredentials, Assistant, AssistantPermissions
 
@@ -73,8 +72,9 @@ def login(_request):
     if _request.method == 'GET':
         _username = _request.GET['username']
         _password = _request.GET['password']
+        print(_username)
         _user = UserCredentials.objects.filter(name=_username, password=_password)
-        if _user.exists():
+        if _user.exists() and _username != "assistant":
             return Response({
                 "found": True
             }, status=status.HTTP_200_OK)
@@ -209,4 +209,3 @@ def assistant(_request):
                 },
                 status=status.HTTP_200_OK
             )
-

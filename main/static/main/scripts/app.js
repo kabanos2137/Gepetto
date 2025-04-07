@@ -226,3 +226,14 @@ class assistantPage {
         this.getAssistant();
     }
 }
+
+class conversationPage {
+    static loadConversation() {
+        let appContent = document.getElementById("app-content");
+        appContent.style.justifyContent = "center";
+    }
+
+    static addEventListeners() {
+        this.loadConversation();
+    }
+}

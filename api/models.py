@@ -24,3 +24,14 @@ class AssistantPermissions(models.Model):
     can_edit = models.BooleanField(default=False)
     can_delete = models.BooleanField(default=False)
     can_view = models.BooleanField(default=False)
+
+class Conversation(models.Model):
+    assistant = models.ForeignKey(Assistant, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    date_of_creation = models.DateTimeField(auto_now_add=True)
+
+class ConversationMessage(models.Model):
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+    message = models.JSONField() # [{ type: text, message: string }, { type: image, message: string }] etc.
+    date_of_creation = models.DateTimeField(auto_now_add=True)
+    sent_by = models.ForeignKey(UserCredentials, on_delete=models.CASCADE)

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, create_acc, create_acc_success, app, m_app, create_assistant, assistant
+from .views import index, create_acc, create_acc_success, app, m_app, create_assistant, assistant, conversation
 
 urlpatterns = [
     path('', index, name='index'),
@@ -8,5 +8,6 @@ urlpatterns = [
     path('app', app, name='app'),
     path("create-assistant", create_assistant, name="create-assistant"),
     path("assistant", assistant, name="assistant"),
+    path("conversation", conversation, name="conversation"),
     path('m-app', m_app, name='m-app'),
 ]

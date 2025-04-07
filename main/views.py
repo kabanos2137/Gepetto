@@ -19,5 +19,8 @@ def create_assistant(request):
 def assistant(request):
     return render(request, "main/assistant.html")
 
+def conversation(request):
+    return render(request, "main/conversation.html")
+
 def m_app(request):
     return render(request, "main/m-app.html")
