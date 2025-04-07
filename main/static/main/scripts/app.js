@@ -35,6 +35,7 @@ class appSettingsBar {
 class appPage {
     static getAssistants() {
         let appContent = document.getElementById("app-content");
+        appContent.style.justifyContent = "center"
         fetch(`/api/assistant?username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}`, {
             method: "GET",
             headers: {
@@ -185,7 +186,10 @@ class assistantPage {
 
         let assistantID = params.get("id");
 
-        fetch(`/api/assistant?id=${assistantID}&username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}`, {
+        let appContent = document.getElementById("app-content");
+        appContent.style.justifyContent = "center"
+
+        fetch(`/api/assistant?assistant_id=${assistantID}&username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -194,6 +198,26 @@ class assistantPage {
         })
             .then(res => res.json())
             .then(res => {
+                appContent.style.justifyContent = "flex-start"
+
+                appContent.innerHTML = `
+                    <div id="assistant-header">
+                        <img src="${res.profile_picture}">
+                        <h1>${res.assistant_name}</h1>
+                    </div>
+                    <div id="assistant-info">
+                        <h2>Description</h2>
+                        <p>${res.description}</p>
+                        <h2>Response style</h2>
+                        <p>${res.response_style}</p>
+                        <h2>Tone</h2>
+                        <p>${res.tone}</p>
+                    </div>
+                    <div id="assistant-content">
+                        <h1>Conversations</h1>
+                        <p>You two haven't talked yet. <u id="assistant-content-create-conversation">Maybe it's a good time to do it?</u></p>
+                    </div>
+                `
             })
             .catch(err => console.log(err));
     }
