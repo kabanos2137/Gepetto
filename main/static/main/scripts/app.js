@@ -237,7 +237,7 @@ class assistantPage {
                         <h1>Conversations</h1>
                         <p>Loading...</p>
                     </div>
-                `//<p></p>
+                `
 
                 fetch(`/api/conversation?username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}&assistant_id=${assistantID}`, {
                     method: "GET",
@@ -292,6 +292,55 @@ class conversationPage {
     static loadConversation() {
         let appContent = document.getElementById("app-content");
         appContent.style.justifyContent = "center";
+
+        const params = new URLSearchParams(window.location.search);
+
+        let conversationID = params.get("id");
+
+        fetch(`/api/conversation?username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}&conversation_id=${conversationID}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                'X-CSRFToken': csrftoken
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                let date = new Date(res.date_of_creation)
+
+                const formatted = date.toLocaleString("en-GB", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                });
+
+                appContent.style.justifyContent = "space-between";
+                appContent.innerHTML = `
+                    <div id="conversation-header">
+                        <h1>${res.conversation_name}</h1>
+                        <h2 onclick="swup.navigate('/assistant?id=${res.assistant_id}')">${res.assistant_name}</h2>
+                        <h3>${formatted}</h3>
+                    </div>
+                    <div id="conversation-messages">
+<!--                        <div class="outer-message">-->
+<!--                            <p class="message-source">From: assistant</p>-->
+<!--                            <p class="message-content">message</p>-->
+<!--                        </div>-->
+<!--                        <div class="inner-message">-->
+<!--                            <p class="message-source">From: you</p>-->
+<!--                            <p class="message-content">message</p>-->
+<!--                        </div>-->
+                    </div>
+                    <div id="conversation-input">
+                        <input type="text" id="conversation-input-message"/>
+                        <div id="conversation-input-message-send">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </div>
+                    </div>
+                `
+            });
     }
 
     static addEventListeners() {
