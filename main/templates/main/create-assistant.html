@@ -41,10 +41,25 @@
                     </div>
                 </div>
                 <div id="app-content">
-                    <h1>Loading...</h1>
+                    <h1>Create new assistant</h1>
+                    <p id="create-assistant-error" class="hidden">AAAA</p>
+                    <form id="create-assistant-form">
+                        <div id="create-assistant-form-image">
+                            <img id="create-assistant-form-profile-picture" src="https://placehold.co/150/707070/707070/png?text=a" alt="">
+                            <p>Upload picture</p>
+                        </div>
+                        <div id="create-assistant-form-input">
+                            <input type="text" name="name" id="create-assistant-form-name" placeholder="assistant name">
+                            <textarea name="description" id="create-assistant-form-description" placeholder="description"></textarea>
+                            <textarea name="response-style" id="create-assistant-form-response-style" placeholder="response style"></textarea>
+                            <textarea name="tone" id="create-assistant-form-tone" placeholder="tone"></textarea>
+                        </div>
+                    </form>
+                    <button id="create-assistant-submit">Create</button>
+                    <canvas id="create-assistant-form-profile-picture-generator" style="display: none" height="150" width="150"></canvas>
                 </div>
             </div>
-            <link rel="stylesheet" href="{% static 'main/style/app.css' %}">
+            <link rel="stylesheet" href="{% static 'main/style/create-assistant.css' %}">
             <link rel="stylesheet" href="{% static 'main/style/settings-app.css' %}">
         </main>
     </body>

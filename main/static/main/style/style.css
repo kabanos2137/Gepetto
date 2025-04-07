@@ -3,6 +3,7 @@
 :root {
     --background: #707070;
     --container: #D9D9D9;
+    --secondary: #5A5A5A;
     --input: #BCBCBC;
     --button-1: #737373;
     --button-2: #848484;
@@ -33,7 +34,7 @@ main {
 }
 
 .transition-fade {
-    transition: 500ms;
+    transition: 0.5s;
     opacity: 1;
     transform: translateX(0);
     transform-origin: left;
@@ -47,4 +48,20 @@ main {
 .is-leaving .transition-fade {
     opacity: 0;
     transform: translateX(0);
+}
+
+.partial-transition {
+    transition: 0.5s;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.is-animating .partial-transition {
+    opacity: 1;
+    transform: translateX(-100%);
+}
+
+.is-leaving .partial-transition {
+    opacity: 0;
+    transform: translateX(100%);
 }

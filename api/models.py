@@ -10,3 +10,38 @@ class UserCredentials(models.Model):
 
     def __str__(self):
         return self.name
+
+class Assistant(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    response_style = models.TextField()
+    tone = models.TextField()
+    profile_picture = models.TextField()
+
+class AssistantPermissions(models.Model):
+    user = models.ForeignKey(UserCredentials, on_delete=models.CASCADE)
+    assistant = models.ForeignKey(Assistant, on_delete=models.CASCADE)
+    can_edit = models.BooleanField(default=False)
+    can_delete = models.BooleanField(default=False)
+    can_view = models.BooleanField(default=False)
+
+class Conversation(models.Model):
+    assistant = models.ForeignKey(Assistant, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    date_of_creation = models.DateTimeField(auto_now_add=True)
+
+class ConversationPermissions(models.Model):
+    user = models.ForeignKey(UserCredentials, on_delete=models.CASCADE)
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+    can_edit = models.BooleanField(default=False)
+    can_delete = models.BooleanField(default=False)
+    can_view = models.BooleanField(default=False)
+
+class ConversationMessage(models.Model):
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+    message = models.TextField()
+    date_of_creation = models.DateTimeField(auto_now_add=True)
+    sent_by = models.ForeignKey(UserCredentials, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.sent_by} on {self.date_of_creation} - ${self.message}'

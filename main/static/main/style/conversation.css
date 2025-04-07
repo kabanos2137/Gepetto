@@ -1,0 +1,217 @@
+#app-content{
+    &.blurred {
+        transform: translateX(320px);
+        filter: blur(5px);
+
+        pointer-events: none;
+    }
+
+    transition: 0.5s;
+
+    width: calc(100% - 80px);
+    height: 100vh;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    overflow-y: auto;
+    white-space: nowrap;
+
+    & > h1{
+        font-size: 70px;
+        font-weight: 300;
+    }
+
+    & > h1, & > h2 {
+        margin: 5px;
+    }
+
+    & u {
+        cursor: pointer;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #A9A9A990;
+        cursor: pointer;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: #A9A9A9FF;
+    }
+}
+
+#conversation-header {
+    transition: 0.5s;
+
+    height: 100px;
+    width: 85%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    padding: 10px;
+
+    border-radius: 0 0 25px 25px;
+
+    background-color: var(--secondary);
+    color: var(--container);
+
+    & > h1, & > h2, & > h3 {
+        padding: 0;
+        margin: 0;
+    }
+
+    & > h3{
+        font-weight: 300;
+    }
+
+    & > h2 {
+        cursor: pointer;
+        text-decoration: underline transparent;
+
+        transition: text-decoration 0.5s;
+    }
+
+    & > h2:hover {
+        text-decoration: underline var(--container);
+    }
+}
+
+#conversation-messages {
+    padding: 10px;
+    width: 85%;
+    height: calc(100vh - 250px);
+    border-radius: 25px 25px 25px 25px;
+
+    overflow-y: auto;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column-reverse;
+
+    background-color: var(--background);
+
+    &::-webkit-scrollbar {
+        width: 10px;
+
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #A9A9A990;
+        cursor: pointer;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: #A9A9A9FF;
+    }
+
+    & > .outer-message {
+        width: 60%;
+        padding: 10px;
+        border-radius: 10px;
+        margin-right: calc(40% - 20px);
+        margin-bottom: 10px;
+        margin-top: 10px;
+
+        height: auto;
+
+        background-color: var(--secondary);
+        color: var(--container);
+    }
+
+    & > .inner-message {
+        text-align: right;
+        width: 60%;
+        padding: 10px;
+        border-radius: 10px;
+        margin-left: calc(40% - 20px);
+        margin-bottom: 10px;
+        margin-top: 10px;
+
+        height: auto;
+
+        background-color: var(--container);
+        color: var(--secondary);
+    }
+}
+
+#conversation-input {
+    transition: 0.5s;
+
+    height: 50px;
+    width: 85%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    padding: 10px;
+
+    border-radius: 25px 25px 0 0;
+
+    background-color: var(--secondary);
+    color: var(--container);
+
+    & > input {
+        font-family: "Jura", sans-serif;
+
+        width: 75%;
+        height: 20px;
+        padding: 10px;
+
+        font-size: 20px;
+        font-weight: 400;
+
+        background-color: var(--input);
+        border: none;
+        border-radius: 12.5px 0 0 12.5px;
+
+        &:focus {
+            border: none;
+            outline: none;
+        }
+    }
+
+    & > div{
+        height: 20px;
+        padding: 10px;
+        width: 20px;
+        background-color: var(--input);
+
+        border-radius: 0 12.5px 12.5px 0;
+
+        color: var(--background);
+        font-size: 20px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        transition: 0.5s;
+
+        &:hover {
+            color: var(--secondary);
+        }
+    }
+}
+
+.message-source {
+    font-size: 12px;
+    margin: 0;
+    font-weight: 300;
+}
+
+.message-content {
+    font-size: 17px;
+    margin: 0;
+    font-weight: 500;
+    white-space: wrap;
+    overflow-wrap: break-word;
+}

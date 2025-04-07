@@ -23,7 +23,13 @@ class logInForm {
             .then(res => res.json())
             .then(res => {
                 if(res.found){
-                    swup.navigate("/app")
+                    localStorage.setItem("username", username.toString());
+                    localStorage.setItem("password", password.toString());
+                    if(isMobile(window)){
+                        swup.navigate("/m-app")
+                    }else{
+                        swup.navigate("/app")
+                    }
                 }else{
                     this.errorDisplay();
                 }
