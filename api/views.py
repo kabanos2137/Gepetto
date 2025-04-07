@@ -335,7 +335,8 @@ def conversation(_request):
                             "message_id": _message.id,
                             "message": _message.message,
                             "date_of_creation": _message.date_of_creation,
-                            "sent_by": _message.sent_by.id
+                            "sent_by": _message.sent_by.id,
+                            "sent_by_name": _message.sent_by.name,
                         } for _message in _conversation_messages
                     ]
                 },
@@ -446,7 +447,7 @@ def message(_request):
         ConversationMessage.objects.create(
             conversation=_conversation,
             message=response.choices[0].message.content,
-            sent_by=UserCredentials.objects.filter(id=0),
+            sent_by=UserCredentials.objects.filter(id=0).get(),
         )
 
         return Response({

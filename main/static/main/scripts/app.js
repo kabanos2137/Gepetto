@@ -289,6 +289,47 @@ class assistantPage {
 }
 
 class conversationPage {
+    static sendMessageEvent(event) {
+        const params = new URLSearchParams(window.location.search);
+
+        let conversationID = params.get("id");
+
+        let messageInput= document.getElementById("conversation-input-message");
+        let message = messageInput.value;
+        messageInput.value = "";
+
+        let messageDiv = document.getElementById("conversation-messages");
+        messageDiv.innerHTML = `
+            <div class="inner-message">
+                <p class="message-source">From: you</p>
+                <p class="message-content">${message}</p>
+            </div>
+        ` + messageDiv.innerHTML
+
+        fetch("/api/message", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                message: message,
+                conversation_id: conversationID,
+                username: localStorage.getItem("username"),
+                password: localStorage.getItem("password")
+            })
+        })
+            .then(res => res.json())
+            .then(res => {
+                messageDiv.innerHTML = `
+                    <div class="outer-message">
+                        <p class="message-source">From: assistant</p>
+                        <p class="message-content">${res.message}</p>
+                    </div>
+                ` + messageDiv.innerHTML
+            });
+    }
+
     static loadConversation() {
         let appContent = document.getElementById("app-content");
         appContent.style.justifyContent = "center";
@@ -324,22 +365,47 @@ class conversationPage {
                         <h3>${formatted}</h3>
                     </div>
                     <div id="conversation-messages">
-<!--                        <div class="outer-message">-->
-<!--                            <p class="message-source">From: assistant</p>-->
-<!--                            <p class="message-content">message</p>-->
-<!--                        </div>-->
-<!--                        <div class="inner-message">-->
-<!--                            <p class="message-source">From: you</p>-->
-<!--                            <p class="message-content">message</p>-->
-<!--                        </div>-->
                     </div>
                     <div id="conversation-input">
                         <input type="text" id="conversation-input-message"/>
                         <div id="conversation-input-message-send">
-                            <i class="fa-solid fa-paper-plane"></i>
+                            <i id="conversation-input-send" class="fa-solid fa-paper-plane"></i>
                         </div>
                     </div>
                 `
+
+                let messagesDiv = document.getElementById("conversation-messages");
+
+
+
+                res.messages.forEach(message => {
+                    if(message.sent_by === 0){
+                        messagesDiv.innerHTML = `
+                            <div class="outer-message">
+                                <p class="message-source">From: assistant</p>
+                                <p class="message-content">${message.message}</p>
+                            </div>
+                        ` + messagesDiv.innerHTML;
+                    }else{
+                        messagesDiv.innerHTML = `
+                            <div class="inner-message">
+                                <p class="message-source">From: you</p>
+                                <p class="message-content">${message.message}</p>
+                            </div>
+                        ` + messagesDiv.innerHTML;
+                    }
+                })
+
+                document.getElementById("conversation-input-send").addEventListener("click", (event) => {
+                    this.sendMessageEvent(event)
+                })
+
+                document.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        conversationPage.sendMessageEvent(event);
+                    }
+                });
             });
     }
 

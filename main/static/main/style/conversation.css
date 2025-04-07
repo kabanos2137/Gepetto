@@ -212,4 +212,6 @@
     font-size: 17px;
     margin: 0;
     font-weight: 500;
+    white-space: wrap;
+    overflow-wrap: break-word;
 }
