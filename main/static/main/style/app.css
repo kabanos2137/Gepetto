@@ -102,3 +102,33 @@
         }
     }
 }
+
+#app-content-create-new-conversation {
+    font-family: "Jura", sans-serif;
+
+    display: block;
+
+    width: 80%;
+    max-width: 400px;
+
+    margin: 20px auto;
+
+    font-size: 20px;
+    font-weight: 400;
+    padding: 7.5px;
+
+    margin-bottom: 6%;
+
+    border: none;
+    border-radius: 12.5px;
+
+    background-color: var(--button-1);
+
+    transition: border-radius 0.25s, color 0.25s;
+
+    &:hover {
+        cursor: pointer;
+        border-radius: 15px;
+        color: #D9D9D9;
+    }
+}
