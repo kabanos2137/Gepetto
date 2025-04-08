@@ -64,6 +64,12 @@ class appPage {
                             </div>
                         `
                     });
+
+                    appContent.innerHTML += `<button id="app-content-create-new-conversation">Create new conversation</button>`
+
+                    document.getElementById("app-content-create-new-conversation").addEventListener("click", (event) => {
+                        this.contentCreateAssistantEventListener(event);
+                    })
                 } else {
                     appContent.style.justifyContent = "center"
 
@@ -276,6 +282,12 @@ class assistantPage {
                                     </div>
                                 `
                             });
+
+                            assistantContent.innerHTML += `<button id="assistant-content-create-new-conversation">Create new conversation</button>`
+
+                            document.getElementById("assistant-content-create-new-conversation").addEventListener("click", (event) => {
+                                this.createConversationEventListener();
+                            })
                         }
                     })
                     .catch(err => console.log(err));
@@ -297,6 +309,8 @@ class conversationPage {
         let messageInput= document.getElementById("conversation-input-message");
         let message = messageInput.value;
         messageInput.value = "";
+
+        console.log(message);
 
         let messageDiv = document.getElementById("conversation-messages");
         messageDiv.innerHTML = `
@@ -400,7 +414,7 @@ class conversationPage {
                     this.sendMessageEvent(event)
                 })
 
-                document.addEventListener('keypress', function(event) {
+                document.getElementById("conversation-input-message").addEventListener('keypress', function(event) {
                     if (event.key === 'Enter') {
                         event.preventDefault();
                         conversationPage.sendMessageEvent(event);
