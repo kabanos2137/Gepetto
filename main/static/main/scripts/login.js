@@ -11,30 +11,51 @@ class logInForm {
 
     }
 
-    static logInButtonEventListener(event) {
+    static logInButtonEventListener (event) {
         event.preventDefault();
 
-        let form = new FormData(document.forms["log-in-form"]);
-
-        let username = form.get("username");
-        let password = form.get("password");
-
-        fetch("/api/login?username=" + username + "&password=" + password)
+        fetch("/api/public_key")
             .then(res => res.json())
-            .then(res => {
-                if(res.found){
-                    localStorage.setItem("username", username.toString());
-                    localStorage.setItem("password", password.toString());
-                    if(isMobile(window)){
-                        swup.navigate("/m-app")
-                    }else{
-                        swup.navigate("/app")
-                    }
-                }else{
-                    this.errorDisplay();
-                }
+            .then(data => {
+                let publicKey = data.public_key
+
+                const encryptor = new JSEncrypt();
+                encryptor.setPublicKey(publicKey);
+
+                let form = new FormData(document.forms["log-in-form"]);
+                let password = form.get("password");
+
+                let encryptedPassword = encryptor.encrypt(password.toString());
+                let username = form.get("username");
+
+                fetch("/api/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: encryptedPassword
+                    })
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        if(res.found){
+                            localStorage.setItem("username", username.toString());
+                            localStorage.setItem("password", password.toString());
+                            if(isMobile(window)){
+                                swup.navigate("/m-app")
+                            }else{
+                                swup.navigate("/app")
+                            }
+                        }else{
+                            this.errorDisplay();
+                        }
+                    })
+                    .catch(err => console.log(err));
             })
-            .catch(err => console.error(err));
+            .catch(err => console.log(err));
     }
 
     static formFieldEventListener(event) {

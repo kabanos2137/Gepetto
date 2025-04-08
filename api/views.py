@@ -4,6 +4,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from dotenv import load_dotenv
+from Crypto import Random
+
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_v1_5
+import base64
 
 from api.models import UserCredentials, Assistant, AssistantPermissions, Conversation, ConversationPermissions, \
     ConversationMessage
@@ -85,12 +90,21 @@ def user(_request):
             'password': _password,
         }, status=status.HTTP_201_CREATED) # return success response
 
-@api_view(['GET'])
+@api_view(['POST'])
 def login(_request):
-    if _request.method == 'GET':
-        _username = _request.GET['username']
-        _password = _request.GET['password']
-        _user = UserCredentials.objects.filter(name=_username, password=_password)
+    if _request.method == "POST":
+        _username = _request.data['username']
+        _encrypted_password = _request.data['password']
+
+        _encrypted_bytes = base64.b64decode(_encrypted_password)
+
+        with open("private.pem", "r") as _f:
+            _private_key = RSA.import_key(_f.read())
+        _cipher = PKCS1_v1_5.new(_private_key)
+        _sentinel = Random.get_random_bytes(32)
+        _decrypted_password = _cipher.decrypt(_encrypted_bytes, _sentinel).decode("utf-8")
+
+        _user = UserCredentials.objects.filter(name=_username, password=_decrypted_password)
         if _user.exists() and _username != "assistant":
             return Response({
                 "found": True
@@ -453,3 +467,14 @@ def message(_request):
         return Response({
             "message": response.choices[0].message.content
         }, status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+def public_key(_request):
+    with open("public.pem", "r") as f:
+        public_key = f.read()
+    return Response(
+        {
+            "public_key": public_key
+        },
+        status=status.HTTP_200_OK
+    )
