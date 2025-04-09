@@ -407,84 +407,160 @@ def conversation(_request):
                 },
                 status=HTTP_200_OK
             )
+    else:
+        return Response(
+            {
+                "message": "Method not allowed"
+            },
+            status=HTTP_405_METHOD_NOT_ALLOWED
+        )
 
 @api_view(['POST'])
 @require_auth
 def message(_request):
     if _request.method == "POST":
-        _message = _request.data['message']
-        _conversation_id = _request.data['conversation_id']
-        _username = _request.data['username']
-        _password = _request.data['password']
-
-        _user = UserCredentials.objects.filter(name=_username, password=_password)
-
-        if not _user.exists():
-            return Response(
-                {
-                    "message": "User not found"
-                },
-                status=status.HTTP_401_UNAUTHORIZED
-            )
-
-        _conversation = Conversation.objects.filter(id=_conversation_id)
-        if not _conversation.exists():
+        try:
+            _conversation = Conversation.objects.filter(id = _request.data["conversation_id"]).get()
+        except Conversation.DoesNotExist:
             return Response(
                 {
                     "message": "Conversation not found"
                 },
-                status=status.HTTP_404_NOT_FOUND
+                status=HTTP_404_NOT_FOUND
             )
 
-        _conversation_permissions = ConversationPermissions.objects.filter(
-            user=_user.get(),
-            conversation=_conversation.get()
-        )
-
-        if not _conversation_permissions.exists() or not _conversation_permissions.get().can_edit:
+        try:
+            _conversation_permission = ConversationPermissions.objects.filter(user = _request.user, conversation = _conversation, can_edit = True).get()
+        except ConversationPermissions.DoesNotExist:
             return Response(
                 {
-                    "message": "You do not have permission to edit this assistant"
+                    "message": "You do not have permissions to this conversation"
                 },
-                status=status.HTTP_401_UNAUTHORIZED
+                status=HTTP_401_UNAUTHORIZED
             )
 
-        _conversation = _conversation.get()
-        _assistant = _conversation.assistant
-
         ConversationMessage.objects.create(
-            conversation=_conversation,
-            message=_message,
-            sent_by=_user.get(),
+            conversation = _conversation,
+            message = _request.data["message"],
+            sent_by = _request.user,
         )
 
-        _conversation_messages = ConversationMessage.objects.filter(conversation=_conversation)
+        _raw_messages = ConversationMessage.objects.filter(conversation = _conversation)
 
         _messages = [{
             "role": "system",
-            "content": build_system_prompt(_assistant.description, _assistant.response_style, _assistant.tone)
+            "content": build_system_prompt(_conversation.assistant.description, _conversation.assistant.response_style, _conversation.assistant.tone),
         }]
 
-        for _old_message in _conversation_messages:
+        for _message in _raw_messages:
             _messages.append({
-                "role": "assistant" if _old_message.sent_by.id == 0 else "user",
-                "content": _old_message.message
+                "role": "assistant" if _message.sent_by.id == 0 else "user",
+                "content": _message.message,
             })
 
-        response = client.chat.completions.create(
-            model="gpt-4-ai-model",
-            messages=_messages,
+        _response = client.chat.completions.create(
+            model = "gpt-4-ai-model",
+            messages = _messages,
+            max_tokens = 1500
         )
 
         ConversationMessage.objects.create(
-            conversation=_conversation,
-            message=response.choices[0].message.content,
-            sent_by=UserCredentials.objects.filter(id=0).get(),
+            conversation = _conversation,
+            message = _response.choices[0].message.content,
+            sent_by = UserCredentials.objects.filter(id = 0).get()
         )
 
-        return Response({
-            "message": response.choices[0].message.content
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "message": _response.choices[0].message.content,
+            },
+            status=HTTP_200_OK
+        )
+    else:
+        return Response(
+            {
+                "message": "Method not allowed"
+            },
+            status=HTTP_405_METHOD_NOT_ALLOWED
+        )
+
+# @api_view(['POST'])
+# @require_auth
+# def message(_request):
+#     if _request.method == "POST":
+#         _message = _request.data['message']
+#         _conversation_id = _request.data['conversation_id']
+#         _username = _request.data['username']
+#         _password = _request.data['password']
+#
+#         _user = UserCredentials.objects.filter(name=_username, password=_password)
+#
+#         if not _user.exists():
+#             return Response(
+#                 {
+#                     "message": "User not found"
+#                 },
+#                 status=status.HTTP_401_UNAUTHORIZED
+#             )
+#
+#         _conversation = Conversation.objects.filter(id=_conversation_id)
+#         if not _conversation.exists():
+#             return Response(
+#                 {
+#                     "message": "Conversation not found"
+#                 },
+#                 status=status.HTTP_404_NOT_FOUND
+#             )
+#
+#         _conversation_permissions = ConversationPermissions.objects.filter(
+#             user=_user.get(),
+#             conversation=_conversation.get()
+#         )
+#
+#         if not _conversation_permissions.exists() or not _conversation_permissions.get().can_edit:
+#             return Response(
+#                 {
+#                     "message": "You do not have permission to edit this assistant"
+#                 },
+#                 status=status.HTTP_401_UNAUTHORIZED
+#             )
+#
+#         _conversation = _conversation.get()
+#         _assistant = _conversation.assistant
+#
+#         ConversationMessage.objects.create(
+#             conversation=_conversation,
+#             message=_message,
+#             sent_by=_user.get(),
+#         )
+#
+#         _conversation_messages = ConversationMessage.objects.filter(conversation=_conversation)
+#
+#         _messages = [{
+#             "role": "system",
+#             "content": build_system_prompt(_assistant.description, _assistant.response_style, _assistant.tone)
+#         }]
+#
+#         for _old_message in _conversation_messages:
+#             _messages.append({
+#                 "role": "assistant" if _old_message.sent_by.id == 0 else "user",
+#                 "content": _old_message.message
+#             })
+#
+#         response = client.chat.completions.create(
+#             model="gpt-4-ai-model",
+#             messages=_messages,
+#         )
+#
+#         ConversationMessage.objects.create(
+#             conversation=_conversation,
+#             message=response.choices[0].message.content,
+#             sent_by=UserCredentials.objects.filter(id=0).get(),
+#         )
+#
+#         return Response({
+#             "message": response.choices[0].message.content
+#         }, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
 def public_key(_request):

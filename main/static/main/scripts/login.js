@@ -43,8 +43,6 @@ class logInForm {
                     .then(res => {
                         if(res.found){
                             localStorage.setItem("token", res.token);
-                            localStorage.setItem("username", username.toString());
-                            localStorage.setItem("password", password.toString());
                             if(isMobile(window)){
                                 swup.navigate("/m-app")
                             }else{

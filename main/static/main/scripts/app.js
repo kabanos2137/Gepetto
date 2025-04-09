@@ -37,7 +37,7 @@ class appPage {
     static getAssistants() {
         let appContent = document.getElementById("app-content");
         appContent.style.justifyContent = "center"
-        fetch(`/api/assistant?username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}`, {
+        fetch(`/api/assistant`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -155,9 +155,7 @@ class createAssistantPage {
                 description: description,
                 response_style: responseStyle,
                 tone: tone,
-                profile_picture: profilePicture,
-                username: localStorage.getItem("username"),
-                password: localStorage.getItem("password"),
+                profile_picture: profilePicture
             })
         })
             .then(res => res.json())
@@ -201,8 +199,6 @@ class assistantPage {
             body: JSON.stringify({
                 conversation_name: "New conversation",
                 assistant_id: new URLSearchParams(window.location.search).get("id"),
-                username: localStorage.getItem("username"),
-                password: localStorage.getItem("password"),
             })
         })
             .then(res => res.json())
@@ -219,7 +215,7 @@ class assistantPage {
         let appContent = document.getElementById("app-content");
         appContent.style.justifyContent = "center"
 
-        fetch(`/api/assistant?assistant_id=${assistantID}&username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}`, {
+        fetch(`/api/assistant?assistant_id=${assistantID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -250,7 +246,7 @@ class assistantPage {
                     </div>
                 `
 
-                fetch(`/api/conversation?username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}&assistant_id=${assistantID}`, {
+                fetch(`/api/conversation?assistant_id=${assistantID}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -336,8 +332,6 @@ class conversationPage {
             body: JSON.stringify({
                 message: message,
                 conversation_id: conversationID,
-                username: localStorage.getItem("username"),
-                password: localStorage.getItem("password")
             })
         })
             .then(res => res.json())
@@ -359,7 +353,7 @@ class conversationPage {
 
         let conversationID = params.get("id");
 
-        fetch(`/api/conversation?username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}&conversation_id=${conversationID}`, {
+        fetch(`/api/conversation?conversation_id=${conversationID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
