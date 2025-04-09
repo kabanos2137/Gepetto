@@ -9,9 +9,10 @@ from Crypto import Random
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5
 import base64
+import uuid
 
 from api.models import UserCredentials, Assistant, AssistantPermissions, Conversation, ConversationPermissions, \
-    ConversationMessage
+    ConversationMessage, UserTokens
 from openai import AzureOpenAI
 
 load_dotenv("./.confidential.env")
@@ -106,8 +107,16 @@ def login(_request):
 
         _user = UserCredentials.objects.filter(name=_username, password=_decrypted_password)
         if _user.exists() and _username != "assistant":
+            token = str(uuid.uuid4())
+
+            UserTokens.objects.create(
+                user = _user.get(),
+                token = token
+            )
+
             return Response({
-                "found": True
+                "found": True,
+                "token": token
             }, status=status.HTTP_200_OK)
         else:
             return Response({

@@ -2,6 +2,7 @@ let createAssistantOwnImage = false;
 
 class appSettingsBar {
     static logoffEventListener(event) {
+        localStorage.removeItem("token");
         localStorage.removeItem("username");
         localStorage.removeItem("password");
 
