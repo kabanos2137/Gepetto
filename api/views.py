@@ -14,7 +14,7 @@ import base64
 import uuid
 
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, \
-    HTTP_405_METHOD_NOT_ALLOWED
+    HTTP_405_METHOD_NOT_ALLOWED, HTTP_401_UNAUTHORIZED
 
 from api.decorators import require_auth
 from api.models import UserCredentials, Assistant, AssistantPermissions, Conversation, ConversationPermissions, \
@@ -176,28 +176,23 @@ def login(_request):
             return Response({
                 "found": False
             }, status=status.HTTP_200_OK)
+    else:
+        return Response(
+            {
+                "message": "Method not allowed"
+            },
+            status=HTTP_405_METHOD_NOT_ALLOWED
+        )
 
 @api_view(['POST', 'GET'])
 @require_auth
 def assistant(_request):
-    if _request.method == 'POST':
+    if _request.method == "POST":
         _name = _request.data['assistant_name']
         _description = _request.data['description']
         _response_style = _request.data['response_style']
         _tone = _request.data['tone']
         _profile_picture = _request.data['profile_picture']
-        _username = _request.data['username']
-        _password = _request.data['password']
-
-        _user = UserCredentials.objects.filter(name=_username, password=_password)
-
-        if not _user.exists():
-            return Response(
-                {
-                "message": "User not found"
-                },
-                status=status.HTTP_401_UNAUTHORIZED
-            )
 
         _assistant = Assistant.objects.create(
             name = _name,
@@ -208,57 +203,44 @@ def assistant(_request):
         )
 
         AssistantPermissions.objects.create(
-            user = _user.get(),
+            user = _request.user,
             assistant = _assistant,
             can_edit = True,
             can_delete = True,
-            can_view = True
+            can_view = True,
         )
 
-        return Response (
+        return Response(
             {
                 "assistant_id": _assistant.id
             },
-            status=status.HTTP_201_CREATED
+            status=HTTP_201_CREATED
         )
-    elif _request.method == 'GET':
-        _username = _request.GET['username']
-        _password = _request.GET['password']
-        _user = UserCredentials.objects.filter(name=_username, password=_password)
-
-        if not _user.exists():
-            return Response(
-                {
-                    "message": "User not found"
-                },
-                status=status.HTTP_401_UNAUTHORIZED
-            )
-
+    elif _request.method == "GET":
         if "assistant_id" in _request.GET:
-            _assistant_id = _request.GET["assistant_id"]
-            _assistant = Assistant.objects.filter(id=_assistant_id)
-            if not _assistant.exists():
+            try:
+                _assistant = Assistant.objects.filter(id = _request.GET["assistant_id"]).get()
+            except Assistant.DoesNotExist:
                 return Response(
                     {
                         "message": "Assistant not found"
                     },
-                    status=status.HTTP_404_NOT_FOUND
+                    status=HTTP_404_NOT_FOUND
                 )
 
-            _assistant_permissions = AssistantPermissions.objects.filter(
-                user=_user.get(),
-                assistant=_assistant.get()
-            )
-
-            if not _assistant_permissions.exists() or not _assistant_permissions.get().can_view:
+            try:
+                _assistant_permission = AssistantPermissions.objects.filter(
+                    user = _request.user,
+                    assistant = _assistant,
+                    can_view = True,
+                )
+            except AssistantPermissions.DoesNotExist:
                 return Response(
                     {
-                        "message": "You do not have permission to view this assistant"
+                        "message": "You do not have permissions to this assistant"
                     },
-                    status=status.HTTP_401_UNAUTHORIZED
+                    status=HTTP_401_UNAUTHORIZED
                 )
-
-            _assistant = _assistant.get()
 
             return Response(
                 {
@@ -267,23 +249,12 @@ def assistant(_request):
                     "description": _assistant.description,
                     "response_style": _assistant.response_style,
                     "tone": _assistant.tone,
-                    "profile_picture": _assistant.profile_picture
-                }, status=status.HTTP_200_OK
+                    "profile_picture": _assistant.profile_picture,
+                },
+                status=HTTP_200_OK
             )
         else:
-            _username = _request.GET['username']
-            _password = _request.GET['password']
-            _user = UserCredentials.objects.filter(name=_username, password=_password)
-
-            if not _user.exists():
-                return Response(
-                    {
-                        "message": "User not found"
-                    },
-                    status=status.HTTP_401_UNAUTHORIZED
-                )
-
-            _permissions = AssistantPermissions.objects.filter(user=_user.get())
+            _permissions = AssistantPermissions.objects.filter(user=_request.user, can_view=True)
 
             _assistants = []
 
@@ -294,15 +265,22 @@ def assistant(_request):
                     "description": _permission.assistant.description,
                     "response_style": _permission.assistant.response_style,
                     "tone": _permission.assistant.tone,
-                    "profile_picture": _permission.assistant.profile_picture
+                    "profile_picture": _permission.assistant.profile_picture,
                 })
 
             return Response(
                 {
                     "assistants": _assistants
                 },
-                status=status.HTTP_200_OK
+                status = status.HTTP_200_OK
             )
+    else:
+        return Response(
+            {
+                "message": "Method not allowed"
+            },
+            status=HTTP_405_METHOD_NOT_ALLOWED
+        )
 
 @api_view(['POST', 'GET', 'PATCH'])
 @require_auth
