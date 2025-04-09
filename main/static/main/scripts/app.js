@@ -41,7 +41,8 @@ class appPage {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
+                "Authorization": `Token ${localStorage.getItem("token")}`
             },
         })
             .then(res => res.json())
@@ -146,7 +147,8 @@ class createAssistantPage {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
+                "Authorization": `Token ${localStorage.getItem("token")}`
             },
             body: JSON.stringify({
                 assistant_name: name,
@@ -193,7 +195,8 @@ class assistantPage {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
+                "Authorization": `Token ${localStorage.getItem("token")}`
             },
             body: JSON.stringify({
                 conversation_name: "New conversation",
@@ -220,7 +223,8 @@ class assistantPage {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
+                "Authorization": `Token ${localStorage.getItem("token")}`
             },
         })
             .then(res => res.json())
@@ -250,7 +254,8 @@ class assistantPage {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        'X-CSRFToken': csrftoken
+                        'X-CSRFToken': csrftoken,
+                        "Authorization": `Token ${localStorage.getItem("token")}`
                     }
                 })
                     .then(res => res.json())
@@ -325,7 +330,8 @@ class conversationPage {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
+                "Authorization": `Token ${localStorage.getItem("token")}`
             },
             body: JSON.stringify({
                 message: message,
@@ -357,7 +363,8 @@ class conversationPage {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
+                "Authorization": `Token ${localStorage.getItem("token")}`
             }
         })
             .then(res => res.json())

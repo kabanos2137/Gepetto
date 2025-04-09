@@ -11,6 +11,7 @@ from Crypto.Cipher import PKCS1_v1_5
 import base64
 import uuid
 
+from api.decorators import require_auth
 from api.models import UserCredentials, Assistant, AssistantPermissions, Conversation, ConversationPermissions, \
     ConversationMessage, UserTokens
 from openai import AzureOpenAI
@@ -87,8 +88,7 @@ def user(_request):
         UserCredentials.objects.create(name=_username, password=_password, email=_email) # save user to database
 
         return Response({
-            'name': _username,
-            'password': _password,
+            'created': True,
         }, status=status.HTTP_201_CREATED) # return success response
 
 @api_view(['POST'])
@@ -124,6 +124,7 @@ def login(_request):
             }, status=status.HTTP_200_OK)
 
 @api_view(['POST', 'GET'])
+@require_auth
 def assistant(_request):
     if _request.method == 'POST':
         _name = _request.data['assistant_name']
@@ -250,6 +251,7 @@ def assistant(_request):
             )
 
 @api_view(['POST', 'GET', 'PATCH'])
+@require_auth
 def conversation(_request):
     if _request.method == 'POST':
         _name = _request.data['conversation_name']
@@ -401,6 +403,7 @@ def conversation(_request):
             )
 
 @api_view(['POST'])
+@require_auth
 def message(_request):
     if _request.method == "POST":
         _message = _request.data['message']
