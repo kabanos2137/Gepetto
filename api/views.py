@@ -1,5 +1,6 @@
 import os
 
+from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -10,6 +11,9 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5
 import base64
 import uuid
+
+from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, \
+    HTTP_405_METHOD_NOT_ALLOWED
 
 from api.decorators import require_auth
 from api.models import UserCredentials, Assistant, AssistantPermissions, Conversation, ConversationPermissions, \
@@ -33,63 +37,102 @@ def build_system_prompt(description: str, response_style: str, tone: str) -> str
 
 @api_view(['GET', 'POST'])
 def user(_request):
-    if _request.method == 'GET':
-        if "username" in _request.GET and "email" in _request.GET:
-            _username = _request.GET["username"]
-            _email = _request.GET["email"]
+    if _request.method == "GET":
+        if "username" in _request.GET:
+            if "email" in _request.GET:
+                try:
+                    _user = UserCredentials.objects.filter(name=_request.GET["username"], email=_request.GET["email"]).get()
+                except UserCredentials.DoesNotExist:
+                    return Response(
+                        {
+                            "found": False,
+                            "message": "No user with given username and email was found"
+                        },
+                        status=HTTP_404_NOT_FOUND
+                    )
 
-            _user = UserCredentials.objects.filter(name=_username, email=_email)
-            if _user.exists():
-                return Response({
-                    "found": True
-                }, status=status.HTTP_200_OK)
+                return Response(
+                    {
+                        "found": True
+                    },
+                    status=HTTP_200_OK
+                )
             else:
-                return Response({
-                    "found": False
-                }, status=status.HTTP_200_OK)
-        elif "username" in _request.GET:
-            _username = _request.GET["username"]
+                try:
+                    _user = UserCredentials.objects.filter(name=_request.GET["username"]).get()
+                except UserCredentials.DoesNotExist:
+                    return Response(
+                        {
+                            "found": False,
+                            "message": "No user with given username was found"
+                        },
+                        status=HTTP_404_NOT_FOUND
+                    )
 
-            _user = UserCredentials.objects.filter(name=_username)
-            if _user.exists():
-                return Response({
-                    "found": True
-                }, status=status.HTTP_200_OK)
-            else:
-                return Response({
-                    "found": False
-                }, status=status.HTTP_200_OK)
-        elif "email" in _request.GET:
-            _email = _request.GET["email"]
-
-            _user = UserCredentials.objects.filter(email=_email)
-            if _user.exists():
-                return Response({
-                    "found": True
-                }, status=status.HTTP_200_OK)
-            else:
-                return Response({
-                    "found": False
-                }, status=status.HTTP_200_OK)
+                return Response(
+                    {
+                        "found": True
+                    },
+                    status=HTTP_200_OK
+                )
         else:
-            return Response({
-                "found": False
-            }, status=status.HTTP_400_BAD_REQUEST)
-    elif _request.method == 'POST': # check if request method is POST
-        _username = _request.data['username'] # get username from request
-        _password = _request.data['password'] # get password from request
-        _email = _request.data['email'] # get email from request
+            if "email" in _request.GET:
+                try:
+                    _user = UserCredentials.objects.filter(email=_request.GET["email"]).get()
+                except UserCredentials.DoesNotExist:
+                    return Response(
+                        {
+                            "found": False,
+                            "message": "No user with given email was found"
+                        },
+                        status=HTTP_404_NOT_FOUND
+                    )
 
-        _user_exists = UserCredentials.objects.filter(name=_username).exists() or UserCredentials.objects.filter(email=_email).exists() # check if user already exists
+                return Response(
+                    {
+                        "found": True
+                    },
+                    status=HTTP_200_OK
+                )
+            else:
+                return Response(
+                    {
+                        "found": False,
+                        "message": "No username or email was provided"
+                    },
+                    status=HTTP_400_BAD_REQUEST
+                )
+    elif _request.method == "POST":
+        try:
+            _user = UserCredentials.objects.filter(Q(name=_request.data["username"]) | Q(email=_request.data["email"])).get()
+        except UserCredentials.DoesNotExist:
+            UserCredentials.objects.create(
+                name=_request.data["username"],
+                password=_request.data["password"],
+                email=_request.data["email"]
+            )
 
-        if _user_exists: # user already exists
-            return Response({'message': 'Username already exists or email already used'}, status=status.HTTP_400_BAD_REQUEST) # return error response
+            return Response(
+                {
+                'created': True
+                },
+                status=HTTP_201_CREATED
+            )
 
-        UserCredentials.objects.create(name=_username, password=_password, email=_email) # save user to database
-
-        return Response({
-            'created': True,
-        }, status=status.HTTP_201_CREATED) # return success response
+        return Response(
+            {
+                "created": False,
+                "message": "Either username or email is already used"
+            },
+            status=HTTP_400_BAD_REQUEST
+        )
+    else:
+        return Response(
+            {
+                "message": "Method not allowed"
+            },
+            status=HTTP_405_METHOD_NOT_ALLOWED
+        )
 
 @api_view(['POST'])
 def login(_request):

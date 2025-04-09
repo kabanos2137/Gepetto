@@ -141,7 +141,6 @@ class createAccountForm {
                 loginDuplicate = res.found; // Check if the username is already taken
                 this.errorDisplay() // Display error message if username is already taken
             })
-            .catch(err => console.log(err));
     }
 
     static emailEventListener(event) { // Add event listener to the login input field
@@ -153,7 +152,6 @@ class createAccountForm {
                 emailDuplicate = res.found; // Check if the username is already taken
                 this.errorDisplay() // Display error message if mail is already taken
             })
-            .catch(err => console.log(err));
     }
 
     static createAccountEventListener(event) { // Add event listener to the create account button
