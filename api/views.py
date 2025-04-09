@@ -1,5 +1,6 @@
 import os
 
+from django.contrib.auth.hashers import make_password, check_password
 from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
@@ -106,15 +107,25 @@ def user(_request):
         try:
             _user = UserCredentials.objects.filter(Q(name=_request.data["username"]) | Q(email=_request.data["email"])).get()
         except UserCredentials.DoesNotExist:
+            print(_request.data)
+            _encrypted_password = _request.data['password']
+            _encrypted_bytes = base64.b64decode(_encrypted_password)
+
+            with open("private.pem", "r") as _f:
+                _private_key = RSA.import_key(_f.read())
+            _cipher = PKCS1_v1_5.new(_private_key)
+            _sentinel = Random.get_random_bytes(32)
+            _decrypted_password = _cipher.decrypt(_encrypted_bytes, _sentinel).decode("utf-8")
+
             UserCredentials.objects.create(
                 name=_request.data["username"],
-                password=_request.data["password"],
+                password=make_password(_decrypted_password),
                 email=_request.data["email"]
             )
 
             return Response(
                 {
-                'created': True
+                    'created': True
                 },
                 status=HTTP_201_CREATED
             )
@@ -148,8 +159,8 @@ def login(_request):
         _sentinel = Random.get_random_bytes(32)
         _decrypted_password = _cipher.decrypt(_encrypted_bytes, _sentinel).decode("utf-8")
 
-        _user = UserCredentials.objects.filter(name=_username, password=_decrypted_password)
-        if _user.exists() and _username != "assistant":
+        _user = UserCredentials.objects.filter(name=_username)
+        if _user.exists() and _username != "assistant" and check_password(_decrypted_password, _user.get().password):
             token = str(uuid.uuid4())
 
             UserTokens.objects.create(

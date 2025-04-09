@@ -157,40 +157,53 @@ class createAccountForm {
     static createAccountEventListener(event) { // Add event listener to the create account button
         event.preventDefault(); // Prevent default action)
 
-        let form = new FormData(document.forms["create-acc-form"]); // Get the form data
+        fetch("/api/public_key")
+            .then(res => res.json())
+            .then(res => {
+                let publicKey = res.public_key
 
-        let username = form.get("username"); // Get the username
-        let password = form.get("password"); // Get the password
-        let email = form.get("email"); // Get the email
+                const encryptor = new JSEncrypt();
+                encryptor.setPublicKey(publicKey);
 
-        if (username === "") { // Check if the data is valid
-            this.errorDisplay("Username cannot be empty")
-            return;
-        }else if(password === ""){
-            this.errorDisplay("Password cannot be empty")
-            return;
-        }else if(email === ""){
-            this.errorDisplay("E-mail cannot be empty")
-            return;
-        }
+                let form = new FormData(document.forms["create-acc-form"]);
+                let password = form.get("password");
 
-        if(hasAtLeastEightChars && hasLowerUpperCase && hasSpecialCharsOrNumbers && passwordSame && !loginDuplicate && !emailDuplicate) { // Check if the data is valid
-            fetch("/api/user", { // Send the data to the server
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json" // Set content type to JSON
-                },
-                body: JSON.stringify({
-                    username: username,
-                    password: password,
-                    email: email
-                })
+                let username = form.get("username"); // Get the username
+                let email = form.get("email"); // Get the email
+
+                if (username === "") { // Check if the data is valid
+                    this.errorDisplay("Username cannot be empty")
+                    return;
+                }else if(password === ""){
+                    this.errorDisplay("Password cannot be empty")
+                    return;
+                }else if(email === ""){
+                    this.errorDisplay("E-mail cannot be empty")
+                    return;
+                }
+
+                if(hasAtLeastEightChars && hasLowerUpperCase && hasSpecialCharsOrNumbers && passwordSame && !loginDuplicate && !emailDuplicate) { // Check if the data is valid
+                    let encryptedPassword = encryptor.encrypt(password.toString());
+
+                    fetch("/api/user", { // Send the data to the server
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json" // Set content type to JSON
+                        },
+                        body: JSON.stringify({
+                            username: username,
+                            password: encryptedPassword,
+                            email: email
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(() => {
+                            swup.navigate('/create-acc-success'); // Navigate to the success page
+                        })
+                        .catch(err => console.log(err));
+                }
             })
-                .then(res => res.json())
-                .then(() => {
-                    swup.navigate('/create-acc-success'); // Navigate to the success page
-                });
-        }
+            .catch(err => console.log(err));
     }
 
     static addEventListeners() {

@@ -1,14 +1,5 @@
 const swup = new Swup();
 
-originalConsoleError = console.error;
-console.error = function (...args) {
-    if (args[0] && args[0].includes && args[0].includes('404')) {
-        return;
-    }
-
-    originalConsoleError.apply(console, args);
-};
-
 swup.hooks.on('animation:out:start', (visit) => {
     if (
         (visit.from.url === '/app' && visit.to.url === '/create-assistant') ||
