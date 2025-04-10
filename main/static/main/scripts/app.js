@@ -45,7 +45,15 @@ class appPage {
                 "Authorization": `Token ${localStorage.getItem("token")}`
             },
         })
-            .then(res => res.json())
+            .then((res) => {
+                if(res.ok === false){
+                    res.json().then(res => {
+                        handleError(res.action);
+                    });
+                }else{
+                    return res.json();
+                }
+            })
             .then(res => {
                 if(res.assistants && res.assistants.length > 0) {
                     let assistants = res.assistants;
@@ -85,7 +93,6 @@ class appPage {
                     })
                 }
             })
-            .catch(err => console.log(err));
     }
 
     static contentCreateAssistantEventListener(event) {
@@ -158,12 +165,17 @@ class createAssistantPage {
                 profile_picture: profilePicture
             })
         })
-            .then(res => res.json())
+            .then((res) => {
+                if(res.ok === false){
+                    res.json().then(res => {
+                        handleError(res.action);
+                    });
+                }else{
+                    return res.json();
+                }
+            })
             .then(res => {
                 swup.navigate(`/assistant?id=${res.assistant_id}`);
-            })
-            .catch(err => {
-                console.error(err);
             })
     }
 
@@ -201,7 +213,15 @@ class assistantPage {
                 assistant_id: new URLSearchParams(window.location.search).get("id"),
             })
         })
-            .then(res => res.json())
+            .then(async (res) => {
+                if(res.ok === false){
+                    res.json().then(res => {
+                        handleError(res.action);
+                    });
+                }else{
+                    return res.json();
+                }
+            })
             .then(res => {
                 swup.navigate(`/conversation?id=${res.conversation_id}`)
             })
@@ -223,7 +243,15 @@ class assistantPage {
                 "Authorization": `Token ${localStorage.getItem("token")}`
             },
         })
-            .then(res => res.json())
+            .then((res) => {
+                if(res.ok === false){
+                    res.json().then(res => {
+                        handleError(res.action);
+                    });
+                }else{
+                    return res.json();
+                }
+            })
             .then(res => {
                 appContent.style.justifyContent = "flex-start"
 
@@ -254,7 +282,15 @@ class assistantPage {
                         "Authorization": `Token ${localStorage.getItem("token")}`
                     }
                 })
-                    .then(res => res.json())
+                    .then((res) => {
+                        if(res.ok === false){
+                            res.json().then(res => {
+                                handleError(res.action);
+                            });
+                        }else{
+                            return res.json();
+                        }
+                    })
                     .then(res => {
                         if(res.conversations.length === 0){
                             document.querySelector("#assistant-content > p").innerHTML = "You two haven't talked yet. <u id=\"assistant-content-create-conversation\">Maybe it's a good time to do it?</u>"
@@ -292,9 +328,7 @@ class assistantPage {
                             })
                         }
                     })
-                    .catch(err => console.log(err));
             })
-            .catch(err => console.log(err));
     }
 
     static addEventListeners() {
@@ -311,8 +345,6 @@ class conversationPage {
         let messageInput= document.getElementById("conversation-input-message");
         let message = messageInput.value;
         messageInput.value = "";
-
-        console.log(message);
 
         let messageDiv = document.getElementById("conversation-messages");
         messageDiv.innerHTML = `
@@ -334,7 +366,15 @@ class conversationPage {
                 conversation_id: conversationID,
             })
         })
-            .then(res => res.json())
+            .then(async (res) => {
+                if(res.ok === false){
+                    res.json().then(res => {
+                        handleError(res.action);
+                    });
+                }else{
+                    return res.json();
+                }
+            })
             .then(res => {
                 messageDiv.innerHTML = `
                     <div class="outer-message">
@@ -361,7 +401,15 @@ class conversationPage {
                 "Authorization": `Token ${localStorage.getItem("token")}`
             }
         })
-            .then(res => res.json())
+            .then((res) => {
+                if(res.ok === false){
+                    res.json().then(res => {
+                        handleError(res.action);
+                    });
+                }else{
+                    return res.json();
+                }
+            })
             .then(res => {
                 let date = new Date(res.date_of_creation)
 
@@ -391,8 +439,6 @@ class conversationPage {
                 `
 
                 let messagesDiv = document.getElementById("conversation-messages");
-
-
 
                 res.messages.forEach(message => {
                     if(message.sent_by === 0){

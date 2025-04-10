@@ -9,3 +9,12 @@ function hasSpecialOrNumber(str) { // Check if the string has special characters
 function isMobile (w) { // Check if the device is mobile
     return w.matchMedia("(max-width: 768px)").matches // Check if the device is mobile
 }
+
+const handleError = (action) => {
+    if(action === "REDIR_TO_LOGIN"){
+        localStorage.removeItem("token")
+        swup.navigate("/")
+    }else if(action === "REDIR_TO_APP"){
+        swup.navigate(isMobile(window) ? "/m-app" : "/app");
+    }
+}

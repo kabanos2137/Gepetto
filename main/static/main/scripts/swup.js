@@ -69,7 +69,7 @@ const addEventListeners = (url) => {
         if(token === null) {
             swup.navigate("/");
         } else {
-            swup.navigate(isMobile(window) ? null : "/app");
+            swup.navigate(isMobile(window) ? "/m-app" : "/app");
         }
     }
 }

@@ -11,7 +11,8 @@ def require_auth(view_func):
         if not auth_header.startswith("Token "):
             return Response(
                 {
-                    "error": "Unauthorized access"
+                    "message": "Unauthorized access",
+                    "action": "REDIR_TO_LOGIN"
                 },
                 status=HTTP_401_UNAUTHORIZED
             )
@@ -23,7 +24,8 @@ def require_auth(view_func):
         except UserTokens.DoesNotExist:
             return Response(
                 {
-                    "error": "Token is invalid"
+                    "message": "Token is invalid",
+                    "action": "REDIR_TO_LOGIN"
                 },
                 status=HTTP_401_UNAUTHORIZED
             )

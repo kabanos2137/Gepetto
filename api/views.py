@@ -107,7 +107,6 @@ def user(_request):
         try:
             _user = UserCredentials.objects.filter(Q(name=_request.data["username"]) | Q(email=_request.data["email"])).get()
         except UserCredentials.DoesNotExist:
-            print(_request.data)
             _encrypted_password = _request.data['password']
             _encrypted_bytes = base64.b64decode(_encrypted_password)
 
@@ -223,7 +222,8 @@ def assistant(_request):
             except Assistant.DoesNotExist:
                 return Response(
                     {
-                        "message": "Assistant not found"
+                        "message": "Assistant not found",
+                        "action": "REDIR_TO_APP"
                     },
                     status=HTTP_404_NOT_FOUND
                 )
@@ -237,7 +237,8 @@ def assistant(_request):
             except AssistantPermissions.DoesNotExist:
                 return Response(
                     {
-                        "message": "You do not have permissions to this assistant"
+                        "message": "You do not have permissions to this assistant",
+                        "action": "REDIR_TO_APP"
                     },
                     status=HTTP_401_UNAUTHORIZED
                 )
@@ -277,7 +278,8 @@ def assistant(_request):
     else:
         return Response(
             {
-                "message": "Method not allowed"
+                "message": "Method not allowed",
+                "action": "REDIR_TO_APP"
             },
             status=HTTP_405_METHOD_NOT_ALLOWED
         )
@@ -291,7 +293,8 @@ def conversation(_request):
         except Assistant.DoesNotExist:
             return Response(
                 {
-                    "message": "Assistant not found"
+                    "message": "Assistant not found",
+                    "action": "REDIR_TO_APP"
                 },
                 status=HTTP_404_NOT_FOUND
             )
@@ -301,7 +304,8 @@ def conversation(_request):
         except AssistantPermissions.DoesNotExist:
             return Response(
                 {
-                    "message": "You do not have permissions to this assistant"
+                    "message": "You do not have permissions to this assistant",
+                    "action": "REDIR_TO_APP"
                 },
                 status=HTTP_401_UNAUTHORIZED
             )
@@ -332,7 +336,8 @@ def conversation(_request):
             except Conversation.DoesNotExist:
                 return Response(
                     {
-                        "message": "Conversation not found"
+                        "message": "Conversation not found",
+                        "action": "REDIR_TO_APP"
                     },
                     status=HTTP_404_NOT_FOUND
                 )
@@ -342,7 +347,8 @@ def conversation(_request):
             except ConversationPermissions.DoesNotExist:
                 return Response(
                     {
-                        "message": "You do not have permissions to this conversation"
+                        "message": "You do not have permissions to this conversation",
+                        "action": "REDIR_TO_APP"
                     },
                     status=HTTP_401_UNAUTHORIZED
                 )
@@ -374,7 +380,8 @@ def conversation(_request):
             except Assistant.DoesNotExist:
                 return Response(
                     {
-                        "message": "Assistant not found"
+                        "message": "Assistant not found",
+                        "action": "REDIR_TO_APP"
                     },
                     status=HTTP_404_NOT_FOUND
                 )
@@ -384,7 +391,8 @@ def conversation(_request):
             except AssistantPermissions.DoesNotExist:
                 return Response(
                     {
-                        "message": "You do not have permission to this assistant"
+                        "message": "You do not have permission to this assistant",
+                        "action": "REDIR_TO_APP"
                     }
                 )
 
@@ -410,7 +418,8 @@ def conversation(_request):
     else:
         return Response(
             {
-                "message": "Method not allowed"
+                "message": "Method not allowed",
+                "action": "REDIR_TO_APP"
             },
             status=HTTP_405_METHOD_NOT_ALLOWED
         )
@@ -424,7 +433,8 @@ def message(_request):
         except Conversation.DoesNotExist:
             return Response(
                 {
-                    "message": "Conversation not found"
+                    "message": "Conversation not found",
+                    "action": "REDIR_TO_APP"
                 },
                 status=HTTP_404_NOT_FOUND
             )
@@ -434,7 +444,8 @@ def message(_request):
         except ConversationPermissions.DoesNotExist:
             return Response(
                 {
-                    "message": "You do not have permissions to this conversation"
+                    "message": "You do not have permissions to this conversation",
+                    "action": "REDIR_TO_APP"
                 },
                 status=HTTP_401_UNAUTHORIZED
             )
@@ -479,88 +490,11 @@ def message(_request):
     else:
         return Response(
             {
-                "message": "Method not allowed"
+                "message": "Method not allowed",
+                "action": "REDIR_TO_APP"
             },
             status=HTTP_405_METHOD_NOT_ALLOWED
         )
-
-# @api_view(['POST'])
-# @require_auth
-# def message(_request):
-#     if _request.method == "POST":
-#         _message = _request.data['message']
-#         _conversation_id = _request.data['conversation_id']
-#         _username = _request.data['username']
-#         _password = _request.data['password']
-#
-#         _user = UserCredentials.objects.filter(name=_username, password=_password)
-#
-#         if not _user.exists():
-#             return Response(
-#                 {
-#                     "message": "User not found"
-#                 },
-#                 status=status.HTTP_401_UNAUTHORIZED
-#             )
-#
-#         _conversation = Conversation.objects.filter(id=_conversation_id)
-#         if not _conversation.exists():
-#             return Response(
-#                 {
-#                     "message": "Conversation not found"
-#                 },
-#                 status=status.HTTP_404_NOT_FOUND
-#             )
-#
-#         _conversation_permissions = ConversationPermissions.objects.filter(
-#             user=_user.get(),
-#             conversation=_conversation.get()
-#         )
-#
-#         if not _conversation_permissions.exists() or not _conversation_permissions.get().can_edit:
-#             return Response(
-#                 {
-#                     "message": "You do not have permission to edit this assistant"
-#                 },
-#                 status=status.HTTP_401_UNAUTHORIZED
-#             )
-#
-#         _conversation = _conversation.get()
-#         _assistant = _conversation.assistant
-#
-#         ConversationMessage.objects.create(
-#             conversation=_conversation,
-#             message=_message,
-#             sent_by=_user.get(),
-#         )
-#
-#         _conversation_messages = ConversationMessage.objects.filter(conversation=_conversation)
-#
-#         _messages = [{
-#             "role": "system",
-#             "content": build_system_prompt(_assistant.description, _assistant.response_style, _assistant.tone)
-#         }]
-#
-#         for _old_message in _conversation_messages:
-#             _messages.append({
-#                 "role": "assistant" if _old_message.sent_by.id == 0 else "user",
-#                 "content": _old_message.message
-#             })
-#
-#         response = client.chat.completions.create(
-#             model="gpt-4-ai-model",
-#             messages=_messages,
-#         )
-#
-#         ConversationMessage.objects.create(
-#             conversation=_conversation,
-#             message=response.choices[0].message.content,
-#             sent_by=UserCredentials.objects.filter(id=0).get(),
-#         )
-#
-#         return Response({
-#             "message": response.choices[0].message.content
-#         }, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
 def public_key(_request):
