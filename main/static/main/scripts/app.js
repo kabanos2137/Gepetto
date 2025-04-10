@@ -349,11 +349,32 @@ class conversationPage {
 
         let messageDiv = document.getElementById("conversation-messages");
         messageDiv.innerHTML = `
-            <div class="inner-message">
+            <div class="inner-message new-message">
                 <p class="message-source">From: you</p>
                 <p class="message-content">${message}</p>
             </div>
         ` + messageDiv.innerHTML
+
+        messageInput.disabled = true;
+
+        setTimeout(() => {
+            messageDiv.firstElementChild.classList.remove("new-message")
+
+            messageDiv.innerHTML = `
+                <div class="outer-message new-message">
+                    <p class="message-source">From: assistant</p>
+                    <div class="dots">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+            ` + messageDiv.innerHTML
+
+            setTimeout(() => {
+                messageDiv.firstElementChild.classList.remove("new-message")
+            }, 10)
+        }, 10)
 
         fetch("/api/message", {
             method: "POST",
@@ -377,12 +398,12 @@ class conversationPage {
                 }
             })
             .then(res => {
-                messageDiv.innerHTML = `
-                    <div class="outer-message">
-                        <p class="message-source">From: assistant</p>
-                        <p class="message-content">${res.message}</p>
-                    </div>
-                ` + messageDiv.innerHTML
+                messageDiv.firstElementChild.innerHTML = `
+                    <p class="message-source">From: assistant</p>
+                    <p class="message-content">${res.message}</p>
+                `
+
+                messageInput.disabled = false;
             });
     }
 
