@@ -1,2 +1,4 @@
 /.idea
 .confidential.env
+private.pem
+public.pem

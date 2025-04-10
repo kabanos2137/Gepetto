@@ -2,6 +2,7 @@ let createAssistantOwnImage = false;
 
 class appSettingsBar {
     static logoffEventListener(event) {
+        localStorage.removeItem("token");
         localStorage.removeItem("username");
         localStorage.removeItem("password");
 
@@ -36,14 +37,23 @@ class appPage {
     static getAssistants() {
         let appContent = document.getElementById("app-content");
         appContent.style.justifyContent = "center"
-        fetch(`/api/assistant?username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}`, {
+        fetch(`/api/assistant`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
+                "Authorization": `Token ${localStorage.getItem("token")}`
             },
         })
-            .then(res => res.json())
+            .then((res) => {
+                if(res.ok === false){
+                    res.json().then(res => {
+                        handleError(res.action);
+                    });
+                }else{
+                    return res.json();
+                }
+            })
             .then(res => {
                 if(res.assistants && res.assistants.length > 0) {
                     let assistants = res.assistants;
@@ -83,7 +93,6 @@ class appPage {
                     })
                 }
             })
-            .catch(err => console.log(err));
     }
 
     static contentCreateAssistantEventListener(event) {
@@ -145,24 +154,28 @@ class createAssistantPage {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
+                "Authorization": `Token ${localStorage.getItem("token")}`
             },
             body: JSON.stringify({
                 assistant_name: name,
                 description: description,
                 response_style: responseStyle,
                 tone: tone,
-                profile_picture: profilePicture,
-                username: localStorage.getItem("username"),
-                password: localStorage.getItem("password"),
+                profile_picture: profilePicture
             })
         })
-            .then(res => res.json())
+            .then((res) => {
+                if(res.ok === false){
+                    res.json().then(res => {
+                        handleError(res.action);
+                    });
+                }else{
+                    return res.json();
+                }
+            })
             .then(res => {
                 swup.navigate(`/assistant?id=${res.assistant_id}`);
-            })
-            .catch(err => {
-                console.error(err);
             })
     }
 
@@ -192,16 +205,23 @@ class assistantPage {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
+                "Authorization": `Token ${localStorage.getItem("token")}`
             },
             body: JSON.stringify({
                 conversation_name: "New conversation",
                 assistant_id: new URLSearchParams(window.location.search).get("id"),
-                username: localStorage.getItem("username"),
-                password: localStorage.getItem("password"),
             })
         })
-            .then(res => res.json())
+            .then(async (res) => {
+                if(res.ok === false){
+                    res.json().then(res => {
+                        handleError(res.action);
+                    });
+                }else{
+                    return res.json();
+                }
+            })
             .then(res => {
                 swup.navigate(`/conversation?id=${res.conversation_id}`)
             })
@@ -215,14 +235,23 @@ class assistantPage {
         let appContent = document.getElementById("app-content");
         appContent.style.justifyContent = "center"
 
-        fetch(`/api/assistant?assistant_id=${assistantID}&username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}`, {
+        fetch(`/api/assistant?assistant_id=${assistantID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
+                "Authorization": `Token ${localStorage.getItem("token")}`
             },
         })
-            .then(res => res.json())
+            .then((res) => {
+                if(res.ok === false){
+                    res.json().then(res => {
+                        handleError(res.action);
+                    });
+                }else{
+                    return res.json();
+                }
+            })
             .then(res => {
                 appContent.style.justifyContent = "flex-start"
 
@@ -245,14 +274,23 @@ class assistantPage {
                     </div>
                 `
 
-                fetch(`/api/conversation?username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}&assistant_id=${assistantID}`, {
+                fetch(`/api/conversation?assistant_id=${assistantID}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        'X-CSRFToken': csrftoken
+                        'X-CSRFToken': csrftoken,
+                        "Authorization": `Token ${localStorage.getItem("token")}`
                     }
                 })
-                    .then(res => res.json())
+                    .then((res) => {
+                        if(res.ok === false){
+                            res.json().then(res => {
+                                handleError(res.action);
+                            });
+                        }else{
+                            return res.json();
+                        }
+                    })
                     .then(res => {
                         if(res.conversations.length === 0){
                             document.querySelector("#assistant-content > p").innerHTML = "You two haven't talked yet. <u id=\"assistant-content-create-conversation\">Maybe it's a good time to do it?</u>"
@@ -290,9 +328,7 @@ class assistantPage {
                             })
                         }
                     })
-                    .catch(err => console.log(err));
             })
-            .catch(err => console.log(err));
     }
 
     static addEventListeners() {
@@ -310,8 +346,6 @@ class conversationPage {
         let message = messageInput.value;
         messageInput.value = "";
 
-        console.log(message);
-
         let messageDiv = document.getElementById("conversation-messages");
         messageDiv.innerHTML = `
             <div class="inner-message">
@@ -324,16 +358,23 @@ class conversationPage {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
+                "Authorization": `Token ${localStorage.getItem("token")}`
             },
             body: JSON.stringify({
                 message: message,
                 conversation_id: conversationID,
-                username: localStorage.getItem("username"),
-                password: localStorage.getItem("password")
             })
         })
-            .then(res => res.json())
+            .then(async (res) => {
+                if(res.ok === false){
+                    res.json().then(res => {
+                        handleError(res.action);
+                    });
+                }else{
+                    return res.json();
+                }
+            })
             .then(res => {
                 messageDiv.innerHTML = `
                     <div class="outer-message">
@@ -352,14 +393,23 @@ class conversationPage {
 
         let conversationID = params.get("id");
 
-        fetch(`/api/conversation?username=${localStorage.getItem("username")}&password=${localStorage.getItem("password")}&conversation_id=${conversationID}`, {
+        fetch(`/api/conversation?conversation_id=${conversationID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
+                "Authorization": `Token ${localStorage.getItem("token")}`
             }
         })
-            .then(res => res.json())
+            .then((res) => {
+                if(res.ok === false){
+                    res.json().then(res => {
+                        handleError(res.action);
+                    });
+                }else{
+                    return res.json();
+                }
+            })
             .then(res => {
                 let date = new Date(res.date_of_creation)
 
@@ -389,8 +439,6 @@ class conversationPage {
                 `
 
                 let messagesDiv = document.getElementById("conversation-messages");
-
-
 
                 res.messages.forEach(message => {
                     if(message.sent_by === 0){

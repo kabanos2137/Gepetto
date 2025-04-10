@@ -3,3 +3,5 @@ Django==5.1.7
 djangorestframework==3.16.0
 sqlparse==0.5.3
 openai~=1.70.0
+python-dotenv~=1.1.0
+pycryptodome~=3.22.0

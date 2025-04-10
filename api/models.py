@@ -11,6 +11,14 @@ class UserCredentials(models.Model):
     def __str__(self):
         return self.name
 
+class UserTokens(models.Model):
+    user = models.ForeignKey(UserCredentials, on_delete=models.CASCADE)
+    token = models.TextField()
+    time_of_creation = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user} - {self.token}'
+
 class Assistant(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()

@@ -30,25 +30,24 @@ window.addEventListener("load", () => {
 });
 
 const addEventListeners = (url) => {
-    let username = localStorage.getItem("username");
-    let password = localStorage.getItem("password");
+    let token = localStorage.getItem("token")
 
     if(url === "/create-acc"){
-        if(username === null || password === null){
+        if(token === null){
             document.getElementById("create-acc-form").reset();
             createAccountForm.addEventListeners();
         } else {
             swup.navigate(isMobile(window) ? "/m-app" : "/app");
         }
     } else if(url === "/"){
-        if(username === null || password === null){
+        if(token === null){
             document.getElementById("log-in-form").reset();
             logInForm.addEventListeners();
         } else {
             swup.navigate(isMobile(window) ? "/m-app" : "/app");
         }
     } else if(url === "/app" || url === "/create-assistant" || url.split("?")[0] === "/assistant" || url.split("?")[0] === "/conversation") {
-        if(username === null || password === null) {
+        if(token === null) {
             swup.navigate("/");
         } else {
             if(url === "/app") {
@@ -67,10 +66,10 @@ const addEventListeners = (url) => {
             }
         }
     } else if(url === "/m-app") {
-        if(username === null || password === null) {
+        if(token === null) {
             swup.navigate("/");
         } else {
-            swup.navigate(isMobile(window) ? null : "/app");
+            swup.navigate(isMobile(window) ? "/m-app" : "/app");
         }
     }
 }
