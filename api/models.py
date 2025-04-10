@@ -14,6 +14,7 @@ class UserCredentials(models.Model):
 class UserTokens(models.Model):
     user = models.ForeignKey(UserCredentials, on_delete=models.CASCADE)
     token = models.TextField()
+    time_of_creation = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.user} - {self.token}'
