@@ -187,7 +187,7 @@ class createAssistantPage {
             this.nameEventListener(event);
         });
 
-        document.addEventListener('keypress', function(event) {
+        document.getElementById("create-assistant-form").addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 createAssistantPage.createEventListener(event);
@@ -476,7 +476,31 @@ class conversationPage {
                     if(event.target.value === ""){
                         event.target.value = earlierConvName;
                     }else{
-                        //TODO: send new name and save it in db
+                        const params = new URLSearchParams(window.location.search);
+
+                        let conversationID = params.get("id");
+
+                        fetch("/api/conversation", {
+                            method: "PATCH",
+                            headers: {
+                                "Content-Type": "application/json",
+                                'X-CSRFToken': csrftoken,
+                                "Authorization": `Token ${localStorage.getItem("token")}`
+                            },
+                            body: JSON.stringify({
+                                conversation_name: event.target.value,
+                                conversation_id: conversationID,
+                            })
+                        })
+                            .then((res) => {
+                                if(res.ok === false){
+                                    res.json().then(res => {
+                                        handleError(res.action);
+                                    });
+                                }else{
+                                    return res.json();
+                                }
+                            })
                     }
                 })
             });

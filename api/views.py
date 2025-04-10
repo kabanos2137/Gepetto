@@ -284,7 +284,7 @@ def assistant(_request):
             status=HTTP_405_METHOD_NOT_ALLOWED
         )
 
-@api_view(['POST', 'GET'])
+@api_view(['POST', 'GET', 'PATCH'])
 @require_auth
 def conversation(_request):
     if _request.method == "POST":
@@ -415,6 +415,38 @@ def conversation(_request):
                 },
                 status=HTTP_200_OK
             )
+    elif _request.method == "PATCH":
+        try:
+            _conversation = Conversation.objects.filter(id = _request.data["conversation_id"]).get()
+        except Conversation.DoesNotExist:
+            return Response(
+                {
+                    "message": "Conversation not found",
+                    "action": "REDIR_TO_APP"
+                },
+                status=HTTP_404_NOT_FOUND
+            )
+
+        try:
+            _conversation_permission = ConversationPermissions.objects.filter(conversation=_conversation, user=_request.user).get()
+        except ConversationPermissions.DoesNotExist:
+            return Response(
+                {
+                    "message": "You do not have permissions to this conversation",
+                    "action": "REDIR_TO_APP"
+                },
+                status=HTTP_401_UNAUTHORIZED
+            )
+
+        if "conversation_name" in _request.data:
+            Conversation.objects.filter(id = _request.data["conversation_id"]).update(name = _request.data["conversation_name"])
+
+        return Response(
+            {
+                "updated": True
+            },
+            status=HTTP_200_OK
+        )
     else:
         return Response(
             {
