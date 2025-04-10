@@ -1,4 +1,5 @@
 let createAssistantOwnImage = false;
+let earlierConvName = "";
 
 class appSettingsBar {
     static logoffEventListener(event) {
@@ -421,10 +422,12 @@ class conversationPage {
                     minute: "2-digit",
                 });
 
+                earlierConvName = res.conversation_name
+
                 appContent.style.justifyContent = "space-between";
                 appContent.innerHTML = `
                     <div id="conversation-header">
-                        <h1>${res.conversation_name}</h1>
+                        <input id="conversation-header-name" type="text" value="${res.conversation_name}"/>
                         <h2 onclick="swup.navigate('/assistant?id=${res.assistant_id}')">${res.assistant_name}</h2>
                         <h3>${formatted}</h3>
                     </div>
@@ -468,6 +471,14 @@ class conversationPage {
                         conversationPage.sendMessageEvent(event);
                     }
                 });
+
+                document.getElementById("conversation-header-name").addEventListener("focusout", (event) => {
+                    if(event.target.value === ""){
+                        event.target.value = earlierConvName;
+                    }else{
+                        //TODO: send new name and save it in db
+                    }
+                })
             });
     }
 
